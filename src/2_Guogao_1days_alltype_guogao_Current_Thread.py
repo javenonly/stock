@@ -9,7 +9,7 @@ import socket
 from pandas import DataFrame
 
 #日期作为文件夹名字
-var_date = '20190114'
+var_date = '20190116'
 def print_up_rate( stock_code ):
     try:
         # 获取股票实时数据
@@ -25,7 +25,7 @@ def print_up_rate( stock_code ):
         # #从第一条数据开始
         buy_index = -1
         # # 跌 < 【过高日】的最高价
-        # front_1 = df_history.iloc[buy_index+1]
+        front_1 = df_history.iloc[buy_index+1]
         # 涨 > 【前n日高】max_value
         front_2 = df_history.iloc[buy_index+2]
         if (
@@ -34,30 +34,23 @@ def print_up_rate( stock_code ):
             #■■■■■■■■■■■■■■■■■■■【附加条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
             # （买入日，观望日）又过前高
             # 实时选股条件
-            float(price_today) > front_2.high
+            float(price_today) > front_1.high
             # or float(high_today) > front_2.high
             #▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼尾盘(★★★★2.30以后★★★★)选股条件▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
             # and buy_day.p_change > 0
             # and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.1)
             #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
             ):
-                #【结果输出】
-                print("====现价过高："+"%06d"%stock_code)  # 股票代码
-        elif (
-            #■■■■■■■■■■■■■■■■■■■【选股条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-            # Guogao_1days_guogao_search.py中已经把符合条件的数据选出
-            #■■■■■■■■■■■■■■■■■■■【附加条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-            # （买入日，观望日）又过前高
-            # 实时选股条件
-            # float(price_today) > front_2.high
-            float(high_today) > front_2.high
-            #▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼尾盘(★★★★2.30以后★★★★)选股条件▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-            # and buy_day.p_change > 0
-            # and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.1)
-            #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
-            ):
-                #【结果输出】
-                print("★★★★最高价过高："+"%06d"%stock_code)  # 股票代码
+                if(float(price_today) > front_2.high):
+                    print("================现价已经过高："+"%06d"%stock_code)  # 股票代码
+                else:
+                    print("现价即将过高："+"%06d"%stock_code)  # 股票代码
+        # elif (
+        #     # 实时选股条件
+        #     float(high_today) > front_2.high
+        #     ):
+        #         #【结果输出】
+        #         print("★★★★最高价过高："+"%06d"%stock_code)  # 股票代码
 
     except IndexError:
         print("%06d" % stock_code + ':IndexError')
@@ -70,7 +63,7 @@ def print_up_rate( stock_code ):
 
 
 #读取[Guogao_1days_guogao_search.py]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/20190114_Guogao1.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/'+ var_date +'_alltype_guogao_1.csv', index_col=None))
 
 threads = []
 
@@ -83,6 +76,6 @@ for stock_code in df_stock_codes.code:
 if __name__ == '__main__':
     for t in threads:
         # 创建线程
-        t.setDaemon(True)
+        # t.setDaemon(True)
         t.start()
-
+        t.join()

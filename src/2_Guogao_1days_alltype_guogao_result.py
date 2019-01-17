@@ -1,12 +1,12 @@
 import pandas as pd
 import datetime
 from pandas import DataFrame
-#========================过高，跌2天，又过高==========================#
+#========================过高，跌1天，又过高==========================#
 #取得当日日期yyyymmdd
 now = datetime.datetime.now()
 #日期作为文件夹名字
 #var_date = now.strftime('%Y%m%d')
-var_date = '20190114'
+var_date = '20190115'
 #读取所有股票代码
 df_all_code = pd.DataFrame(pd.read_csv('C:/stock_data/all_code_test.csv', index_col=None))
 #成交量比例
@@ -16,7 +16,7 @@ price_up_high = 4.5
 #定义长阳日的涨幅最小
 price_up_low = 2.5
 #计算数组内[]后面几天的上涨概率
-up_days = [1,2,3]
+up_days = [1]
 #抽出的股票代码
 list_code = []
 #涨幅的2.5%概率
@@ -34,6 +34,8 @@ for item_code in df_all_code.code:
         long_total = 0
         # 上涨的总数
         up_cnt = 0
+        # 上涨日期
+        up_dates = ""
         # 下跌日期
         down_dates = ""
         # 循环股票的历史数据
@@ -50,9 +52,9 @@ for item_code in df_all_code.code:
             buy_day = df_history.iloc[buy_index]
             # 跌 < 前高日的最高价
             front_1 = df_history.iloc[buy_index+1]
-            # 跌 < 前高日的最高价
-            front_2 = df_history.iloc[buy_index+2]
             # 涨 > 前高（前几日的最高价）
+            front_2 = df_history.iloc[buy_index+2]
+            # 前三日：buy_index + 3
             front_3 = df_history.iloc[buy_index+3]
             # 前四日：buy_index + 4
             front_4 = df_history.iloc[buy_index+4]
@@ -86,7 +88,7 @@ for item_code in df_all_code.code:
                 # and (buy_day.ma10 > buy_day.ma20)
                 #▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼尾盘(★★★★2.30以后★★★★)选股条件▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
                 # and buy_day.p_change > 0
-                # and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.1)
+                and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.2)
                 #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
                 ):
                 #■■■■■■■■■■■■■■■■【计算】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -95,16 +97,17 @@ for item_code in df_all_code.code:
                 #选股日后的up_days天，最高点比前高最高点涨幅达到price_up_rate以上概率
                 up_cnt_boolean = False
                 for up_day in up_days:
-                    if (df_history.iloc[buy_index - up_day].high / front_2.high > price_up_rate):
+                    if (df_history.iloc[buy_index - up_day].high / buy_day.high > price_up_rate):
                         up_cnt_boolean = True
                         # print("OK:"+df_history.iloc[buy_index].date)
                         break
                 if up_cnt_boolean:
                     # 上涨的总数
                     up_cnt += 1
+                    up_dates += ":上涨"+df_history.iloc[buy_index].date
                 else:
                     # print("NG:"+df_history.iloc[buy_index].date)
-                    down_dates += ":"+df_history.iloc[buy_index].date
+                    down_dates += ":下跌"+df_history.iloc[buy_index].date
             buy_index += 1
 
     except IndexError:
@@ -114,6 +117,6 @@ for item_code in df_all_code.code:
         print("%06d" % item_code + 'FileNotFoundError')
         continue
     if long_total > 0:
-        print("%06d" % item_code + ':'+str(long_total)+':' +str(up_cnt/long_total*100) + down_dates)
+        print("%06d" % item_code + ':'+str(long_total)+':' +str(up_cnt/long_total*100) + up_dates + down_dates)
     else:
         print("%06d" % item_code + ':none:-')
