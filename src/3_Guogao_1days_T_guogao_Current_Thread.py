@@ -8,11 +8,10 @@ import socket
 
 from pandas import DataFrame
 
-#======max_value(front3...),过高(front_2)，跌一天[T型](front_1)，过高(实时数据)=======#
-#======过高(实时数据) > 过高(front_2)=======#
+#========================【过高日的数据，下跌1天(T型)】-> 今日过前高==========================#
 #日期作为文件夹名字
-var_date = '20190116'
-def print_up_rate( stock_code ):
+var_date = '20190117'
+def print_up_stock( stock_code ):
     try:
         # 获取股票实时数据
         df_today = ts.get_realtime_quotes("%06d"%stock_code)
@@ -35,9 +34,9 @@ def print_up_rate( stock_code ):
             float(price_today) > front_1.high
             ):
                 if(float(price_today) > front_2.high):
-                    print("================现价已经过高："+"%06d"%stock_code)  # 股票代码
+                    print("================现价已经过高："+"%06d"%stock_code)
                 else:
-                    print("现价即将过高："+"%06d"%stock_code)  # 股票代码
+                    print("现价即将过高："+"%06d"%stock_code)
     except IndexError:
         print("%06d" % stock_code + ':IndexError')
     except FileNotFoundError:
@@ -55,7 +54,7 @@ threads = []
 
 for stock_code in df_stock_codes.code:
     try:
-        threads.append(threading.Thread(target=print_up_rate,args=(stock_code,)))
+        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,)))
     except:
         print("%06d" % stock_code + ':error')
 

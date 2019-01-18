@@ -5,12 +5,12 @@ import time
 import tushare as ts
 import urllib
 import socket
-
 from pandas import DataFrame
-#========================过高日的数据，跌1天==========================#
+
+#========================【过高日的数据】->今日跌1天(T型)==========================#
 #日期作为文件夹名字
-var_date = '20190116'
-def print_up_rate( stock_code ):
+var_date = '20190117'
+def print_up_stock( stock_code ):
     try:
         # 获取股票实时数据
         df_today = ts.get_realtime_quotes("%06d"%stock_code)
@@ -23,20 +23,20 @@ def print_up_rate( stock_code ):
         # # 从本地csv文件，获取历史数据
         df_history = pd.DataFrame(pd.read_csv('C:/stock_data/' + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         #■■■■■■■■■■■■■■■■■■■【选股条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-        # Guogao_1days_T_search.py中已经把符合条件的数据选出
+        # 1_Guogao_1days_T_search.py中已经把符合条件(过高日的数据)的数据选出
         #■■■■■■■■■■■■■■■■■■■【附加条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
         #从第一条数据开始
         buy_index = -1
         # 第一条数据
         front_1 = df_history.iloc[buy_index+1]
         if (
-            # （买入日，观望日）低于前高，T型
-            # 实时选股条件
-            #▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼尾盘(★★★★2.30以后★★★★)选股条件▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
+            #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
+            # 实时选股条件:（买入日，观望日）低于前高，T型
+            # 低于前高
             float(high_today) < front_1.high
             # T型
             and ((float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2)
-            #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+            #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             ):
                 print("%06d"%stock_code)  # 股票代码
 
@@ -55,11 +55,12 @@ def print_up_rate( stock_code ):
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
 df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/'+ var_date +'_T_1.csv', index_col=None))
 
+# 多线程实行
 threads = []
-
+# 循环抽出的股票代码
 for stock_code in df_stock_codes.code:
     try:
-        threads.append(threading.Thread(target=print_up_rate,args=(stock_code,)))
+        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,)))
     except:
         print("%06d" % stock_code + ':error')
 
