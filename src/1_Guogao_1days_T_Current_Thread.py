@@ -5,11 +5,16 @@ import time
 import tushare as ts
 import urllib
 import socket
+import globalvar as gl
+import setInitValue
 from pandas import DataFrame
 
 #========================【过高日的数据】->今日跌1天(T型)==========================#
 #日期作为文件夹名字
-var_date = '20190117'
+var_date = gl.get_value('var_date')
+stock_data_path = gl.get_value('stock_data_path')
+df_all_code_file = gl.get_value('df_all_code_file')
+
 def print_up_stock( stock_code ):
     try:
         # 获取股票实时数据
@@ -21,7 +26,7 @@ def print_up_stock( stock_code ):
         # 今日最低价
         low_today = df_today.iloc[0].low
         # # 从本地csv文件，获取历史数据
-        df_history = pd.DataFrame(pd.read_csv('C:/stock_data/' + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
+        df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         #■■■■■■■■■■■■■■■■■■■【选股条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
         # 1_Guogao_1days_T_search.py中已经把符合条件(过高日的数据)的数据选出
         #■■■■■■■■■■■■■■■■■■■【附加条件】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -33,9 +38,9 @@ def print_up_stock( stock_code ):
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             # 实时选股条件:（买入日，观望日）低于前高，T型
             # 低于前高
-            float(high_today) < front_1.high
+            # float(high_today) < front_1.high
             # T型
-            and ((float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2)
+            (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             ):
                 print("%06d"%stock_code)  # 股票代码
@@ -53,7 +58,7 @@ def print_up_stock( stock_code ):
 
 
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/'+ var_date +'_T_1.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_T_1.csv', index_col=None))
 
 # 多线程实行
 threads = []

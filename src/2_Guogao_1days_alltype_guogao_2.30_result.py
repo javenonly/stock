@@ -1,12 +1,7 @@
 import pandas as pd
 import datetime
 from pandas import DataFrame
-#========================过高，跌1天，又过高==========================#
-# 后面3日
-# 【前几日的最高价】涨幅>1%的的概率■■■较高■■■
-# 【过高日（买入日）的最高价】1%涨幅的概率■■■较低■■■
-# 重点：尾盘 收阳(收盘价接近最高价)，此种情况，【买入日的最高价】1%涨幅的概率■■■较高■■■
-
+#========================过高，跌1天，又过高(尾盘，收阳，收盘价接近最高价)==========================#
 #取得当日日期yyyymmdd
 now = datetime.datetime.now()
 #日期作为文件夹名字
@@ -24,6 +19,7 @@ price_up_low = 2.5
 up_days = [1,2,3]
 #抽出的股票代码
 list_code = []
+#涨幅的2.5%概率
 #长阳日后五天内的，最高点的涨幅
 price_up_rate = 1.01
 # 符合选股条件的总数
@@ -89,8 +85,9 @@ for item_code in df_all_code.code:
                 # and (buy_day.ma5 > buy_day.ma10)
                 # and (buy_day.ma10 > buy_day.ma20)
                 #▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼尾盘(★★★★2.30以后★★★★)选股条件▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼▼
-                # and buy_day.p_change > 0
-                # and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.2)
+                and buy_day.p_change > 0
+                and buy_day.high > buy_day.low
+                and ((buy_day.high - buy_day.close) / (buy_day.high - buy_day.low) < 0.2)
                 #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
                 ):
                 #■■■■■■■■■■■■■■■■【计算】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
@@ -99,7 +96,7 @@ for item_code in df_all_code.code:
                 #选股日后的up_days天，最高点比前高最高点涨幅达到price_up_rate以上概率
                 up_cnt_boolean = False
                 for up_day in up_days:
-                    if (df_history.iloc[buy_index - up_day].high / front_2.high > price_up_rate):
+                    if (df_history.iloc[buy_index - up_day].high / buy_day.high > price_up_rate):
                         up_cnt_boolean = True
                         # print("OK:"+df_history.iloc[buy_index].date)
                         break
@@ -118,9 +115,9 @@ for item_code in df_all_code.code:
     except FileNotFoundError:
         print("%06d" % item_code + 'FileNotFoundError')
         continue
+
+print(str(long_total)+':' +str(up_cnt/long_total*100))
     # if long_total > 0:
     #     print("%06d" % item_code + ':'+str(long_total)+':' +str(up_cnt/long_total*100) + up_dates + down_dates)
     # else:
     #     print("%06d" % item_code + ':none:-')
-
-print(str(long_total)+':' +str(up_cnt/long_total*100))

@@ -4,26 +4,27 @@ import tushare as ts
 import urllib
 import socket
 import csv
-
+import globalvar as gl
+import setInitValue
 from pandas import DataFrame
 #========================过高，跌1天（T型）==========================#
-#抽出的股票代码
-list_code = []
-#读取所有股票代码
-df_all_code = pd.DataFrame(pd.read_csv('C:/stock_data/all_code.csv', index_col=None))
 #历史数据日期yyyymmdd文件夹
-var_date = '20190117'
+var_date = gl.get_value('var_date')
+stock_data_path = gl.get_value('stock_data_path')
+df_all_code_file = gl.get_value('df_all_code_file')
+#读取所有股票代码
+df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index_col=None))
 index_stock = 0
 # ,code
 #直接保存
-out = open('c:/stock_data/' + var_date + '_T_guogao_1.csv','a', newline='')
+out = open(stock_data_path + var_date + '_T_guogao_1.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 csv_write.writerow(['',"code"])
 
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
     try:
-        df_history = pd.DataFrame(pd.read_csv('C:/stock_data/' + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
+        df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         #从第一条数据开始
         buy_index = -1
         # 跌 < 【过高日】的最高价

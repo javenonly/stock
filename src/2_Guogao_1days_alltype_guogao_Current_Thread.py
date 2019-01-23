@@ -5,11 +5,15 @@ import time
 import tushare as ts
 import urllib
 import socket
+import globalvar as gl
+import setInitValue
 from pandas import DataFrame
 
 #========================【过高日的数据，下跌1天】-> 今日过前高==========================#
 #日期作为文件夹名字
-var_date = '20190117'
+var_date = gl.get_value('var_date')
+stock_data_path = gl.get_value('stock_data_path')
+
 def print_up_stock( stock_code ):
     try:
         # 获取股票实时数据
@@ -25,7 +29,7 @@ def print_up_stock( stock_code ):
         # 今日涨跌幅
         # changepercent = df_today.iloc[0].changepercent
         # # 从本地csv文件，获取历史数据
-        df_history = pd.DataFrame(pd.read_csv('C:/stock_data/' + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
+        df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         # #从第一条数据开始
         buy_index = -1
         # 历史第一条数据（跌）
@@ -44,10 +48,10 @@ def print_up_stock( stock_code ):
             #▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲尾盘(★★★★2.30以后★★★★)选股条件▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
             ):
                 # 实时价格 > 前高
-                if(float(price_today) > front_2.high):
-                    print("================现价已经过高："+"%06d"%stock_code)
-                else:
-                    print("现价即将过高："+"%06d"%stock_code)
+                # if(float(price_today) > front_2.high):
+                #     print("================现价已经过高："+"%06d"%stock_code)
+                # else:
+                print("%06d"%stock_code)
     except IndexError:
         print("%06d" % stock_code + ':IndexError')
     except FileNotFoundError:
@@ -59,7 +63,7 @@ def print_up_stock( stock_code ):
 
 
 #读取[2_Guogao_1days_alltype_guogao_search.py]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/'+ var_date +'_alltype_guogao_1.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path+ var_date +'_alltype_guogao_1.csv', index_col=None))
 
 threads = []
 

@@ -6,7 +6,7 @@ from pandas import DataFrame
 now = datetime.datetime.now()
 #日期作为文件夹名字
 #var_date = now.strftime('%Y%m%d')
-var_date = '20190116'
+var_date = '20190118'
 #读取所有股票代码
 df_all_code = pd.DataFrame(pd.read_csv('C:/stock_data/all_code_test.csv', index_col=None))
 #计算数组内[]后面几天的上涨概率

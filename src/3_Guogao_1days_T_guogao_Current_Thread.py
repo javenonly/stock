@@ -5,12 +5,15 @@ import time
 import tushare as ts
 import urllib
 import socket
-
+import globalvar as gl
+import setInitValue
 from pandas import DataFrame
 
 #========================【过高日的数据，下跌1天(T型)】-> 今日过前高==========================#
 #日期作为文件夹名字
-var_date = '20190117'
+var_date = gl.get_value('var_date')
+stock_data_path = gl.get_value('stock_data_path')
+
 def print_up_stock( stock_code ):
     try:
         # 获取股票实时数据
@@ -18,7 +21,7 @@ def print_up_stock( stock_code ):
         # 今日实时价
         price_today = df_today.iloc[0].price
         # 从本地csv文件，获取历史数据
-        df_history = pd.DataFrame(pd.read_csv('C:/stock_data/' + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
+        df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         # #从第一条数据开始
         buy_index = -1
         # [提醒] price_today > front_1.high
@@ -48,7 +51,7 @@ def print_up_stock( stock_code ):
 
 
 #读取[3_Guogao_1days_T_guogao_search.py -> YYYYMMDD_T_Guogao_1.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv('C:/stock_data/'+ var_date +'_T_guogao_1.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path+ var_date +'_T_guogao_1.csv', index_col=None))
 
 threads = []
 
