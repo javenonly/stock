@@ -6,7 +6,7 @@ from pandas import DataFrame
 #文件夹日期 yyyymmdd
 # now = datetime.datetime.now()
 # var_date = now.strftime('%Y%m%d')
-var_date = '20181227'
+var_date = '20190108'
 
 df1 = pd.DataFrame(pd.read_csv('C:/stock_data/all_code.csv', index_col=None))
 
@@ -14,13 +14,13 @@ df1 = pd.DataFrame(pd.read_csv('C:/stock_data/all_code.csv', index_col=None))
 long_date_index = 1
 
 #成交量最小比例
-volume_up_rate_low = 1.4
+volume_up_rate_low = 1.2
 
 #成交量最大比例
 volume_up_rate_high = 3
 
 #定义长阳日的涨幅最小
-price_up_low = 3
+price_up_low = 2.8
 
 #定义长阳日的涨幅最大
 price_up_high = 5.9
@@ -54,9 +54,9 @@ for item_code in df1.code:
             and (df.iloc[long_date_index].volume > df.iloc[long_date_index + 8].volume)
             and (df.iloc[long_date_index].volume > df.iloc[long_date_index + 9].volume)
             and (df.iloc[long_date_index].volume > df.iloc[long_date_index + 10].volume)
-            # 长阳日的涨幅 > 最小涨幅
+            # 长阳日的涨幅 > （定義的）最小涨幅
             and (df.iloc[long_date_index].p_change >= price_up_low)
-            # 长阳日的涨幅 < 最大涨幅
+            # 长阳日的涨幅 < （定義的）最大涨幅
             and (df.iloc[long_date_index].p_change <= price_up_high)
             # 长阳日收阳线
             and (df.iloc[long_date_index].close > df.iloc[long_date_index].open)
