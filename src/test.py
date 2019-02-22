@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf-8
 # print(min(1,23,5,666,23))
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf-8
 import tushare as ts
 import pandas as pd
 import datetime

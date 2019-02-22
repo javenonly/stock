@@ -1,3 +1,6 @@
+#!/usr/bin/python
+#coding:utf-8
+
 import tushare as ts
 import globalvar as gl
 import setInitValue

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+#coding:utf-8
 from time import sleep
 import tkinter
 import tkinter.messagebox #这个是消息框，对话框的关键
