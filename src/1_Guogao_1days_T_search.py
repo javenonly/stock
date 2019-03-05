@@ -9,7 +9,7 @@ import csv
 import globalvar as gl
 import setInitValue
 from pandas import DataFrame
-#========================过高==========================#
+#========================过高，前面振幅<6%==========================#
 var_date = gl.get_value('var_date')
 stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
@@ -29,40 +29,38 @@ for stock_code in df_all_code.code:
         df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
         #从第一条数据开始
         buy_index = -1
-        # > 【前n日高】max_value
-        front_1 = df_history.iloc[buy_index+1]
-        # 前二日：< 【前n日最高价】max_value
-        front_2 = df_history.iloc[buy_index+2]
-        # 前三日：buy_index + 3
-        front_3 = df_history.iloc[buy_index+3]
-        # 前四日：buy_index + 4
-        front_4 = df_history.iloc[buy_index+4]
-        # 前五日：buy_index + 5
-        front_5 = df_history.iloc[buy_index+5]
-        # 前六日：buy_index + 6
-        front_6 = df_history.iloc[buy_index+6]
-        # 前七日：buy_index + 7
-        front_7 = df_history.iloc[buy_index+7]
-        # 前八日：buy_index + 8
-        front_8 = df_history.iloc[buy_index+8]
-        # 前九日：buy_index + 9
-        front_9 = df_history.iloc[buy_index+9]
-        max_value = max(front_3.high,front_4.high,front_5.high,front_6.high,front_7.high,front_8.high,front_9.high)
+        # > 【前n日高】max_high_value
+        data_1 = df_history.iloc[buy_index+1]
+        # 前二日：< 【前n日最高价】max_high_value
+        data_2 = df_history.iloc[buy_index+2]
+        # 前三日
+        data_3 = df_history.iloc[buy_index+3]
+        data_4 = df_history.iloc[buy_index+4]
+        data_5 = df_history.iloc[buy_index+5]
+        data_6 = df_history.iloc[buy_index+6]
+        data_7 = df_history.iloc[buy_index+7]
+        data_8 = df_history.iloc[buy_index+8]
+        data_9 = df_history.iloc[buy_index+9]
+        max_high_value = max(data_2.high,data_3.high,data_4.high,data_5.high,data_6.high,data_7.high,data_8.high,data_9.high)
+        min_low_value = min(data_2.low,data_3.low,data_4.low,data_5.low,data_6.low,data_7.low,data_8.low,data_9.low)
         if (
             #■■■■■■■■■■■■■■■■■■■【选股条件】■■■■■■■■■■■■■■■■■■■■■■
-            # 过前n日最高价 > max_value
-             (front_1.high > max_value)
-            # 【过高日】的前一日 < max_value
-            and (front_2.high < max_value)
+            # 过前n日最高价 > max_high_value
+             (data_1.high > max_high_value)
+            # 【过高日】的前一日 < max_high_value
+            and (data_2.high < max_high_value)
+            # 前面8天没有大幅度涨过，今天是突破前高
+            and (max_high_value / min_low_value <= 1.12)
             ):
                 print("%06d"%stock_code)
                 csv_write.writerow([index_stock,"%06d"%stock_code])
                 index_stock += 1
     except IndexError:
-        print("%06d" % stock_code + 'IndexError')
-        # continue
+        # print("%06d" % stock_code + 'IndexError')
+        continue
     except FileNotFoundError:
-        print("%06d" % stock_code + 'FileNotFoundError')
+        # print("%06d" % stock_code + 'FileNotFoundError')
+        continue
     except urllib.error.URLError:
         continue
     except socket.timeout:

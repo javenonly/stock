@@ -4,6 +4,7 @@ import pandas as pd
 import datetime
 import threading
 import time
+from time import sleep
 import tushare as ts
 import urllib
 import socket
@@ -11,15 +12,13 @@ import globalvar as gl
 import setInitValue
 from pandas import DataFrame
 
-# ========================【过高日（第一天）的数据】==========================#
-# ========================【今日（第二天）《尾盘》明显上涨(收盘价接近最高价）==========================#
-# ========================收盘价不能高出第一天最高价很多==========================#
+# ========================【过高后，n天内接近过超过前高】==========================#
 #日期作为文件夹名字
 var_date = gl.get_value('var_date')
 stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 
-def print_up_stock( stock_code ):
+def print_up_stock( stock_code , max_high_value):
     try:
         # 获取股票实时数据
         df_today = ts.get_realtime_quotes("%06d"%stock_code)
@@ -30,13 +29,8 @@ def print_up_stock( stock_code ):
         # 今日最低价
         low_today = df_today.iloc[0].low
         if (
-            #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
-            # 实时选股条件:（买入日，观望日）低于前高，T型
-            # 低于前高
-            # float(high_today) < front_1.high
-            # T型
-            (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
-            #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
+            # 接近前高 或者 超过前高
+            float(price_today) / float(max_high_value) > 0.985
             ):
                 print("%06d"%stock_code)  # 股票代码
 
@@ -53,14 +47,17 @@ def print_up_stock( stock_code ):
 
 
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_T_1.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_n_output.csv', index_col=None))
 
 # 多线程实行
 threads = []
 # 循环抽出的股票代码
+loop_index = 0
 for stock_code in df_stock_codes.code:
+    max_high_value = df_stock_codes.iloc[loop_index].max_high_value
+    loop_index += 1
     try:
-        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,)))
+        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,max_high_value,)))
     except:
         print("%06d" % stock_code + ':error')
 

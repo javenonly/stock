@@ -19,7 +19,7 @@ var_date = gl.get_value('var_date')
 stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 
-def print_up_stock( stock_code ):
+def print_up_stock( stock_code, price_pm2 ):
     try:
         # 获取股票实时数据
         df_today = ts.get_realtime_quotes("%06d"%stock_code)
@@ -36,6 +36,8 @@ def print_up_stock( stock_code ):
             # float(high_today) < front_1.high
             # T型
             (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+            # 尾盘比2点的价格上涨
+            and float(price_today) / float(price_pm2) >= 1.01
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             ):
                 print("%06d"%stock_code)  # 股票代码
@@ -52,17 +54,20 @@ def print_up_stock( stock_code ):
         print("%06d" % stock_code + ':ZeroDivisionError')
 
 
-#读取[Guogao_1days_T_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_T_1.csv', index_col=None))
+#读取[Guogao_1days_PM2_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_T_1_PM2.csv', index_col=None))
 
 # 多线程实行
 threads = []
 # 循环抽出的股票代码
+loop_pm2_index = 0
 for stock_code in df_stock_codes.code:
+    price_pm2 = df_stock_codes.iloc[loop_pm2_index].price
     try:
-        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,)))
+        threads.append(threading.Thread(target=print_up_stock,args=(stock_code,price_pm2,)))
     except:
         print("%06d" % stock_code + ':error')
+    loop_pm2_index += 1
 
 if __name__ == '__main__':
     for t in threads:
