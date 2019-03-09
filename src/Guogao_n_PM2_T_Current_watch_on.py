@@ -26,11 +26,17 @@ df_all_code_file = gl.get_value('df_all_code_file')
 #读取[Guogao_1days_PM2_search.py -> YYYYMMDD_Guogao_n_output_PM2..csv]结果的所有股票代码
 df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_n_output_PM2.csv', index_col=None))
 
-while True:
+existCode_array = []
 
+while True:
+    print("★★★★★★★★★★★★★★★选股开始★★★★★★★★★★★★★★★★")
     # 循环抽出的股票代码
     loop_index = 0
     for stock_code in df_stock_codes.code:
+
+        if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
+            continue
+
         max_high_value = df_stock_codes.iloc[loop_index].max_high_value
         price_pm2 = df_stock_codes.iloc[loop_index].price
         loop_index += 1
@@ -47,28 +53,35 @@ while True:
             if (
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 # T型
-                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+                (
+                float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
                 # 接近最高价
                 and float(price_today) / float(max_high_value) > 0.985
                 # 尾盘比2点的价格上涨
                 and float(price_today) / float(price_pm2) >= 1.01
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 ):  
+                    existCode_array.append("%06d"%stock_code)
                     print("%06d"%stock_code)  # 股票代码
-                    tkinter.messagebox.showinfo('上涨提示', '股票：[' + "%06d"%stock_code + ']->比下午2点上涨1%以上')
+                    # tkinter.messagebox.showinfo('上涨提示', '股票：[' + "%06d"%stock_code + ']->比下午2点上涨1%以上')
 
         except IndexError:
-            print("%06d" % stock_code + ':IndexError')
+            continue
+            # print("%06d" % stock_code + ':IndexError')
         except FileNotFoundError:
-            print("%06d" % stock_code + ':FileNotFoundError')
+            continue
+            # print("%06d" % stock_code + ':FileNotFoundError')
         except urllib.error.URLError:
-            print("%06d" % stock_code + ':urllib.error.URLError')
+            continue
+            # print("%06d" % stock_code + ':urllib.error.URLError')
         except socket.timeout:
-            print("%06d" % stock_code + ':socket.timeout')
+            continue
+            # print("%06d" % stock_code + ':socket.timeout')
         except ZeroDivisionError:
-            print("%06d" % stock_code + ':ZeroDivisionError')
+            continue
+            # print("%06d" % stock_code + ':ZeroDivisionError')
 
     #休眠一下，继续获取实时股票数据
-    sleep(2)
+    sleep(10)
 
 

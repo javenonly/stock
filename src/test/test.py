@@ -6,8 +6,9 @@
 a_aarry = [22,44,666]
 # print(min(a_aarry))
 
+print(22 in a_aarry)
 
-# print(a_aarry.index(44))
+print(a_aarry.index(44))
 
 
 aaa = 3

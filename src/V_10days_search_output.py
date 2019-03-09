@@ -19,9 +19,9 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 index_stock = 0
 # ,code
 #直接保存
-out = open(stock_data_path + var_date + '_10day_V.csv','a', newline='')
+out = open(stock_data_path + var_date + '_V.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
-csv_write.writerow(['',"code"])
+# csv_write.writerow(['',"code"])
 
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
@@ -63,47 +63,32 @@ for stock_code in df_all_code.code:
         # print(max_high_value)
         most_low_index = data_low_array.index(min_low_value)
         # print(most_low_index)
+        # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
         if (max_high_value / min_low_value > 1.08 and most_low_index > 0 and most_low_index < 4) :
             left_length = 10 - most_low_index -1
             right_length = most_low_index
             # print(left_length)
             # print(right_length)
             left_data_high_array = [1]*left_length
-            left_data_close_array = [1]*left_length
             left_i = 0
             while left_i < left_length:
                 left_data_high_array[left_i] = data_high_array[9-left_i]
-                left_data_close_array[left_i] = data_close_array[9-left_i]
                 left_i += 1
             
-            left_max_close_value = max(left_data_close_array)
-
-            right_data_low_array = [1]*right_length
             right_data_high_array = [1]*right_length
-            right_data_p_change_array= [1]*right_length
-            right_data_close_array = [1]*right_length
             right_i = 0
             while right_length - right_i >= 1:
-                right_data_low_array[right_i] = data_low_array[right_length - 1 - right_i]
                 right_data_high_array[right_i] = data_high_array[right_length - 1 - right_i]
-                right_data_p_change_array[right_i] = data_p_change_array[right_length - 1 - right_i]
-                right_data_close_array[right_i] = data_close_array[right_length - 1 - right_i]
                 right_i += 1
             
             left_max_high_value = max(left_data_high_array)
             right_max_high_value = max(right_data_high_array)
-            right_max_p_change_value = max(right_data_p_change_array)
 
-            # 左边最高价到谷底10%涨幅
-            if (left_max_high_value / min_low_value > 1.08
-                # 右边最多3根
-                and right_length < 4
-                and right_length > 1
-                # 右边最高价 < 左边最高价
-                and right_max_high_value < left_max_high_value):
-                    print("%06d"%stock_code)
-                    csv_write.writerow([index_stock,"%06d"%stock_code])
-                    index_stock += 1
+            # 右边最高价 < 左边最高价
+            if (right_max_high_value < left_max_high_value):
+                print("%06d"%stock_code)
+                csv_write.writerow([index_stock,"%06d"%stock_code])
+                index_stock += 1
 
     except IndexError:
         print("%06d" % stock_code + 'IndexError')

@@ -11,7 +11,7 @@ import globalvar as gl
 import setInitValue
 from pandas import DataFrame
 
-#========================【过高日的数据】->今日跌1天(T型)==========================#
+#========================【V型数据】->今日(尾盘T型，大涨4.5%以上)==========================#
 #日期作为文件夹名字
 var_date = gl.get_value('var_date')
 stock_data_path = gl.get_value('stock_data_path')

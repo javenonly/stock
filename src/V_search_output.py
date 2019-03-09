@@ -15,14 +15,13 @@ stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 #读取所有股票代码
 df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index_col=None))
-#历史数据日期yyyymmdd文件夹
+#写入文件的index(index_stock,"code")
 index_stock = 0
-# ,code
-#直接保存
+#保存文件的名字
 out = open(stock_data_path + var_date + '_V.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 csv_write.writerow(['',"code"])
-
+# 循环所有的股票code
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
     try:
@@ -81,11 +80,11 @@ for stock_code in df_all_code.code:
         max_close_value = max(data_close_array)
         # 最低价中最低价的索引
         most_low_index = data_low_array.index(min_low_value)
-        # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间
-        if (max_high_value / min_low_value > 1.08 and most_low_index > 0 and most_low_index < 10) :
-            # 最低价 左边长度
+        # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
+        if (max_high_value / min_low_value > 1.08 and most_low_index > 0 and most_low_index < 4) :
+            # 【最低价】左边的长度
             left_length = 20 - most_low_index -1
-            # 最低价 右边长度
+            # 【最低价】右边的长度
             right_length = most_low_index
             # 左边最高价集合
             left_data_high_array = [1]*left_length
@@ -96,9 +95,6 @@ for stock_code in df_all_code.code:
                 left_data_high_array[left_i] = data_high_array[19-left_i]
                 left_data_close_array[left_i] = data_close_array[19-left_i]
                 left_i += 1
-            # 左边收盘价结合中的最高价
-            left_max_close_value = max(left_data_close_array)
-
             # 右边最低价集合
             right_data_low_array = [1]*right_length
             # 右边最高价集合
@@ -114,23 +110,12 @@ for stock_code in df_all_code.code:
                 right_data_p_change_array[right_i] = data_p_change_array[right_length - 1 - right_i]
                 right_data_close_array[right_i] = data_close_array[right_length - 1 - right_i]
                 right_i += 1
-            # 左边最高价集合中的最高价
+            # 【左边】最高价集合中的最高价
             left_max_high_value = max(left_data_high_array)
-            # 右边最高价集合中的最高价
+            # 【右边】最高价集合中的最高价
             right_max_high_value = max(right_data_high_array)
-            # 右边涨幅集合中的最高涨幅
-            right_max_p_change_value = max(right_data_p_change_array)
-            # 右边涨幅集合中的最低涨幅
-            right_min_p_change_value = min(right_data_p_change_array)
-            # 左边最高价到谷底10%涨幅
-            if (left_max_high_value / min_low_value > 1.08
-                # 右边最多3根
-                and right_length < 4
-                and right_length > 1
-                # 右边最高价 < 左边最高价
-                and right_max_high_value < left_max_high_value
-                # 都是阳线
-                and right_min_p_change_value > 0):
+            # 右边最高价 < 左边最高价
+            if (right_max_high_value < left_max_high_value):
                     print("%06d"%stock_code)
                     csv_write.writerow([index_stock,"%06d"%stock_code])
                     index_stock += 1
