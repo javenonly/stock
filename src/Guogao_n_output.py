@@ -58,13 +58,15 @@ for stock_code in df_all_code.code:
                             data_11.close,data_12.close,data_13.close,data_14.close,data_15.close]
         # 最高价集合中最高价
         max_high_value = max(data_high_array)
+        # 最高价集合中最高价
+        max_close_value = max(data_close_array)
         # 最高价中最高价的索引
         most_high_index = data_high_array.index(max_high_value)
         if (
-            # 最近4天过高
+            # 最近7天过高
             most_high_index >= 0
             # 【过高日】的前一日 < max_high_value
-            and most_high_index <= 3
+            and most_high_index <= 6
             ):
                 # 左边长度
                 left_length = 15 - most_high_index -1
@@ -84,7 +86,9 @@ for stock_code in df_all_code.code:
                 # 左边最低价集合中的最低价
                 left_min_low_value = min(left_data_low_array)
                 # 左边没有大幅度涨过，振幅 < 10%
-                if( left_max_high_value / left_min_low_value <= 1.1
+                if( left_max_high_value / left_min_low_value <= 1.10
+                    # 排除已经过多上涨的(最高收盘价已经过大上涨)
+                    and max_close_value / left_max_high_value <= 1.02
                     # 左边最后一条不是最高价
                     and left_data_high_array[left_length-1] <= left_max_high_value
                     ):

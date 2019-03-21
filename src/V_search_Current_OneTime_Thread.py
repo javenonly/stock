@@ -33,9 +33,9 @@ def print_up_stock( stock_code ):
         if (
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             # 实时选股条件:涨幅 > 4.5%
-            float(price_today) / float(open_today) > 1.045
+            float(price_today) / float(open_today) > 1.03
             # T型
-            and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.15
+            and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             ):
                 print("%06d"%stock_code)  # 股票代码

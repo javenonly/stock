@@ -80,8 +80,8 @@ for stock_code in df_all_code.code:
         max_close_value = max(data_close_array)
         # 最低价中最低价的索引
         most_low_index = data_low_array.index(min_low_value)
-        # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
-        if (max_high_value / min_low_value > 1.08 and most_low_index > 0 and most_low_index < 4) :
+        # 最低价 ~ 最高价 幅度>12% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
+        if (max_high_value / min_low_value > 1.12 and most_low_index > 0 and most_low_index < 5) :
             # 【最低价】左边的长度
             left_length = 20 - most_low_index -1
             # 【最低价】右边的长度

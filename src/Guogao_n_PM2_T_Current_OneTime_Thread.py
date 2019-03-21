@@ -37,7 +37,9 @@ def print_up_stock( stock_code, max_high_value, price_pm2 ):
             # T型
             (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
             # 接近最高价
-            and float(price_today) / float(max_high_value) > 0.985
+            and float(price_today) / float(max_high_value) < 1.015
+            # 接近前高 或者 超过前高
+            and float(price_today) / float(max_high_value) > 0.975
             # 尾盘比2点的价格上涨
             and float(price_today) / float(price_pm2) >= 1.01
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★

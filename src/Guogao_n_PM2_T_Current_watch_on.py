@@ -53,10 +53,11 @@ while True:
             if (
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 # T型
-                (
-                float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
                 # 接近最高价
-                and float(price_today) / float(max_high_value) > 0.985
+                and float(price_today) / float(max_high_value) < 1.015
+                # 接近前高 或者 超过前高
+                and float(price_today) / float(max_high_value) > 0.975
                 # 尾盘比2点的价格上涨
                 and float(price_today) / float(price_pm2) >= 1.01
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
@@ -82,6 +83,6 @@ while True:
             # print("%06d" % stock_code + ':ZeroDivisionError')
 
     #休眠一下，继续获取实时股票数据
-    sleep(10)
+    sleep(3)
 
 

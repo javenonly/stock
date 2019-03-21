@@ -64,7 +64,7 @@ for stock_code in df_all_code.code:
         most_low_index = data_low_array.index(min_low_value)
         # print(most_low_index)
         # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
-        if (max_high_value / min_low_value > 1.08 and most_low_index > 0 and most_low_index < 4) :
+        if (max_high_value / min_low_value > 1.10 and most_low_index > 0 and most_low_index < 5) :
             left_length = 10 - most_low_index -1
             right_length = most_low_index
             # print(left_length)
