@@ -24,7 +24,7 @@ df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_V.csv', 
 existCode_array = []
 
 while True:
-    print("--------search start-----------")
+    print("--------V-3-search start-----------")
     # 循环抽出的股票代码
     for stock_code in df_stock_codes.code:
         if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
@@ -44,7 +44,7 @@ while True:
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
             if (float(price_today) / float(open_today) > 1.03
                 # 尾盘(2.30以后)选股条件(T型)
-                and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+                and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
                 ):
                     existCode_array.append("%06d"%stock_code)
                     print("%06d"%stock_code)  # 股票代码

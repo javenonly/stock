@@ -29,12 +29,14 @@ df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_n
 existCode_array = []
 
 while True:
-    print("★★★★★★★★★★★★★★★选股开始★★★★★★★★★★★★★★★★")
+    print("--------Guogao_n_PM2_T----------------")
     # 循环抽出的股票代码
     loop_index = 0
-    for stock_code in df_stock_codes.code:
 
+    for stock_code in df_stock_codes.code:
+        # print("%06d"%stock_code)
         if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
+            loop_index += 1
             continue
 
         max_high_value = df_stock_codes.iloc[loop_index].max_high_value
@@ -53,7 +55,7 @@ while True:
             if (
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 # T型
-                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
                 # 接近最高价
                 and float(price_today) / float(max_high_value) < 1.015
                 # 接近前高 或者 超过前高

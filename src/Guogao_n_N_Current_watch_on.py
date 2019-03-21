@@ -27,11 +27,13 @@ existCode_array = []
 
 while True:
 
+    print("-----------Guogao_n_N-----------")
     # 循环抽出的股票代码
     loop_index = 0
     for stock_code in df_stock_codes.code:
 
         if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
+            loop_index += 1
             continue
 
         max_high_value = df_stock_codes.iloc[loop_index].max_high_value
@@ -48,10 +50,10 @@ while True:
             low_today = df_today.iloc[0].low
             if (
                 # T 型
-                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
-                # 接近前高 或者 超过前高
+                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
+                # 超过前高
                 and float(price_today) / float(max_high_value) <= 1.015
-                # 接近前高 或者 超过前高
+                # 接近前高
                 and float(price_today) / float(max_high_value) >= 0.975
                 ):
                     existCode_array.append("%06d"%stock_code)
@@ -59,15 +61,20 @@ while True:
                     # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
 
         except IndexError:
-            print("%06d" % stock_code + ':IndexError')
+            continue
+            # print("%06d" % stock_code + ':IndexError')
         except FileNotFoundError:
-            print("%06d" % stock_code + ':FileNotFoundError')
+            continue
+            # print("%06d" % stock_code + ':FileNotFoundError')
         except urllib.error.URLError:
-            print("%06d" % stock_code + ':urllib.error.URLError')
+            continue
+            # print("%06d" % stock_code + ':urllib.error.URLError')
         except socket.timeout:
-            print("%06d" % stock_code + ':socket.timeout')
+            continue
+            # print("%06d" % stock_code + ':socket.timeout')
         except ZeroDivisionError:
-            print("%06d" % stock_code + ':ZeroDivisionError')
+            continue
+            # print("%06d" % stock_code + ':ZeroDivisionError')
 
     #休眠一下，继续获取实时股票数据
     sleep(3)
