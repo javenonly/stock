@@ -64,4 +64,4 @@ while True:
             continue
             # print("%06d" % stock_code + ':ZeroDivisionError')
     #休眠一下，继续获取实时股票数据
-    sleep(3)
+    # sleep(3)

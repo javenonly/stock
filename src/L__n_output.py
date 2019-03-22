@@ -59,8 +59,8 @@ for stock_code in df_all_code.code:
         # 最高价中最高价的索引
         most_high_index = data_high_array.index(max_high_value)
         if (
-            # 7天前出现最高价
-            most_high_index >= 19
+            # 12天前出现最高价
+            most_high_index >= 12
             ):
                 print("%06d"%stock_code)
                 csv_write.writerow([index_stock,"%06d"%stock_code,max_high_value])

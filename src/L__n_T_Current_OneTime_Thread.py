@@ -30,11 +30,11 @@ def print_up_stock( stock_code , max_high_value):
         low_today = df_today.iloc[0].low
         if (
             # T型
-            (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.2
+            (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
             # 接近前高 或者 超过前高
-            and float(price_today) / float(max_high_value) < 1.015
+            and float(price_today) / float(max_high_value) < 1.02
             # 接近前高 或者 超过前高
-            and float(price_today) / float(max_high_value) > 0.975
+            and float(price_today) / float(max_high_value) > 0.98
             ):
                 print("%06d"%stock_code)  # 股票代码
 
@@ -51,7 +51,7 @@ def print_up_stock( stock_code , max_high_value):
 
 
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_T_Guogao1.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_n_output.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_H_output.csv', index_col=None))
 
 # 多线程实行
 threads = []

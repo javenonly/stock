@@ -24,7 +24,7 @@ df_all_code_file = gl.get_value('df_all_code_file')
 
 #关注的股票
 #读取[Guogao_1days_PM2_search.py -> YYYYMMDD_Guogao_n_output_PM2..csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_Guogao_n_output_PM2.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_N_n_output_PM2.csv', index_col=None))
 
 existCode_array = []
 
@@ -53,15 +53,11 @@ while True:
             # 今日最低价
             low_today = df_today.iloc[0].low
             if (
-                #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
+                #★★★★★★★★★★★★★★★★尾盘上涨(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 # T型
                 (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
-                # 接近最高价
-                and float(price_today) / float(max_high_value) < 1.015
-                # 接近前高 或者 超过前高
-                and float(price_today) / float(max_high_value) > 0.975
                 # 尾盘比2点的价格上涨
-                and float(price_today) / float(price_pm2) >= 1.01
+                and float(price_today) / float(price_pm2) >= 1.008
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 ):  
                     existCode_array.append("%06d"%stock_code)
@@ -85,6 +81,6 @@ while True:
             # print("%06d" % stock_code + ':ZeroDivisionError')
 
     #休眠一下，继续获取实时股票数据
-    sleep(3)
+    # sleep(3)
 
 

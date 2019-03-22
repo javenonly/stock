@@ -19,7 +19,7 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 index_stock = 0
 # ,code
 #直接保存
-out = open(stock_data_path + var_date + '_Guogao_n_output.csv','a', newline='')
+out = open(stock_data_path + var_date + '_N_n_output.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 csv_write.writerow(['',"code","max_high_value"])
 
