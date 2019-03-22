@@ -29,10 +29,10 @@ def print_up_stock( stock_code , data_1_close):
         # 今日最低价
         low_today = df_today.iloc[0].low
         if (
-            # T型
-            (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
             # 超过昨日收盘价格
-            and float(price_today) > float(data_1_close) 
+            float(price_today) > float(data_1_close) 
+            # T型
+            and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.35
             ):
                 print("%06d"%stock_code)  # 股票代码
 

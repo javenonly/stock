@@ -88,7 +88,7 @@ for stock_code in df_all_code.code:
                 # 左边没有大幅度涨过，振幅 < 10%
                 if( left_max_high_value / left_min_low_value <= 1.10
                     # 排除已经过多上涨的(最高收盘价已经过大上涨)
-                    and max_close_value / left_max_high_value <= 1.02
+                    and max_close_value / left_max_high_value <= 1.025
                     # 左边最后一条不是最高价
                     and left_data_high_array[left_length-1] <= left_max_high_value
                     ):
