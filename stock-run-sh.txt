@@ -1,0 +1,26 @@
+************************************************************************************
+1.最近n(7)天内过前高（15天周期）
+2.没有大幅上涨过
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_output.py
+3.前一日为T型
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_T_output.py
+************************************************************************************
+
+【====================================当日选股条件=============================================】
+【2点】: 获取2点时的价格
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2.py
+
+【2：30】：T型，接近前高
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_T_Current_watch_on.py
+
+【2：30】：T型，尾盘上涨
+---python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2_T_Current_watch_on.py
+
+【2：30】：T型，接近前高，尾盘上涨
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2_T_UP_Current_watch_on.py
+
+【2：30】：前一日为T型，尾盘超过前一日收盘价，（今日又是T型--要求低）
+python3 /Users/shawn/Documents/workspace/stock/src/N_n_T_output_T_Current_watch_on.py
+
+~【2：30】后执行：V型 3%以上涨幅
+python3 /Users/shawn/Documents/workspace/stock/src/V_search_Watch_On.py
