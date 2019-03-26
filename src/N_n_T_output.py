@@ -71,7 +71,7 @@ for stock_code in df_all_code.code:
             and most_high_index <= 6
             # T型
             and (float(data_1.open) - float(data_1.low)) / (float(data_1.high) - float(data_1.low)) > 0.55
-            and data_1.close >= data_1.open*0.995
+            and data_1.close >= data_1.open*0.994
 
             ):
                 # 左边长度
