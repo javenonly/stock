@@ -21,7 +21,7 @@ index_stock = 0
 #直接保存
 out = open(stock_data_path + var_date + '_V.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
-# csv_write.writerow(['',"code"])
+csv_write.writerow(['',"code","yestoday_high"])
 
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
@@ -64,7 +64,7 @@ for stock_code in df_all_code.code:
         most_low_index = data_low_array.index(min_low_value)
         # print(most_low_index)
         # 最低价 ~ 最高价 幅度>10% , 最低价的索引 在 中间【1（右边有1根阳线），2（右边有2根阳线），3（右边有3根阳线）】
-        if (max_high_value / min_low_value > 1.10 and most_low_index > 0 and most_low_index < 5) :
+        if (max_high_value / min_low_value > 1.12 and most_low_index > 0 and most_low_index < 4) :
             left_length = 10 - most_low_index -1
             right_length = most_low_index
             # print(left_length)
@@ -87,7 +87,7 @@ for stock_code in df_all_code.code:
             # 右边最高价 < 左边最高价
             if (right_max_high_value < left_max_high_value):
                 print("%06d"%stock_code)
-                csv_write.writerow([index_stock,"%06d"%stock_code])
+                csv_write.writerow([index_stock,"%06d"%stock_code,data_1.high])
                 index_stock += 1
 
     except IndexError:

@@ -32,9 +32,9 @@ def print_up_stock( stock_code , max_high_value):
             # T型
             (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
             # 接近前高 或者 超过前高
-            and float(price_today) / float(max_high_value) < 1.02
+            and float(price_today) / float(max_high_value) < 1.01
             # 接近前高 或者 超过前高
-            and float(price_today) / float(max_high_value) > 0.975
+            and float(price_today) / float(max_high_value) > 0.988
             ):
                 print("%06d"%stock_code)  # 股票代码
 

@@ -19,14 +19,15 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 index_stock = 0
 # ,code
 #直接保存
-out = open(stock_data_path + var_date + '_N_n_output.csv','a', newline='')
+out = open(stock_data_path + var_date + '_N_n_T_output.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
-csv_write.writerow(['',"code","max_high_value"])
+csv_write.writerow(['',"code","data_1_close"])
 
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
     try:
         df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
+        
         #从第一条数据开始
         buy_index = -1
         data_1 = df_history.iloc[buy_index+1]
@@ -62,14 +63,20 @@ for stock_code in df_all_code.code:
         max_close_value = max(data_close_array)
         # 最高价中最高价的索引
         most_high_index = data_high_array.index(max_high_value)
+        # print(most_high_index)
         if (
             # 最近7天过高
-            most_high_index >= 0
+            most_high_index >= 1
             # 【过高日】的前一日 < max_high_value
             and most_high_index <= 6
+            # T型
+            and (float(data_1.open) - float(data_1.low)) / (float(data_1.high) - float(data_1.low)) > 0.7
+            and data_1.close >= data_1.open*0.994
+
             ):
                 # 左边长度
                 left_length = 15 - most_high_index -1
+                # print(left_length)
                 # 右边长度
                 right_length = most_high_index
                 # 左边最高价集合
@@ -87,13 +94,13 @@ for stock_code in df_all_code.code:
                 left_min_low_value = min(left_data_low_array)
                 # 左边没有大幅度涨过，振幅 < 10%
                 if( left_max_high_value / left_min_low_value <= 1.10
-                    # 排除已经过多上涨的(最高收盘价已经过大上涨)
-                    and max_close_value / left_max_high_value <= 1.025
+                    # # 排除已经过多上涨的(最高收盘价已经过大上涨)
+                    # and max_close_value / left_max_high_value <= 1.02
                     # 左边最后一条不是最高价
-                    and left_data_high_array[left_length-1] <= left_max_high_value
+                    and left_data_high_array[left_length-1] < left_max_high_value
                     ):
                         print("%06d"%stock_code)
-                        csv_write.writerow([index_stock,"%06d"%stock_code,max_high_value])
+                        csv_write.writerow([index_stock,"%06d"%stock_code,data_1.close])
                         index_stock += 1
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
@@ -104,4 +111,6 @@ for stock_code in df_all_code.code:
     except urllib.error.URLError:
         continue
     except socket.timeout:
+        continue
+    except ZeroDivisionError:
         continue

@@ -24,12 +24,17 @@ df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_V.csv', 
 existCode_array = []
 
 while True:
-    print("--------V-3-search start-----------")
+    print("---《V模型-右边2根阳线》-《今日上涨2.5点..大于昨日最高价..T型》---")
+    # 循环抽出的股票代码
+    loop_index = 0
     # 循环抽出的股票代码
     for stock_code in df_stock_codes.code:
         if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
+            loop_index += 1
             continue
 
+        yestoday_high = df_stock_codes.iloc[loop_index].yestoday_high
+        loop_index += 1
         try:
             # 获取股票实时数据
             df_today = ts.get_realtime_quotes("%06d"%stock_code)
@@ -39,15 +44,17 @@ while True:
             high_today = df_today.iloc[0].high
             # 今日实时价
             price_today = df_today.iloc[0].price
-            # 今日最低价
+            # # 今日最低价
             low_today = df_today.iloc[0].low
             #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
-            if (float(price_today) / float(open_today) > 1.03
+            if (float(price_today) >= float(yestoday_high)
+                and price_today >= high_today
+                # and float(price_today) / float(open_today) > 1.025
                 # 尾盘(2.30以后)选股条件(T型)
-                and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
+                # and (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
                 ):
                     existCode_array.append("%06d"%stock_code)
-                    print("%06d"%stock_code)  # 股票代码
+                    print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
         except IndexError:
             continue
             # print("%06d" % stock_code + ':IndexError')

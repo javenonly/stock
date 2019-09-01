@@ -1,3 +1,4 @@
+
 #!/usr/bin/python
 #coding:utf-8
 import tushare as ts
@@ -21,22 +22,24 @@ stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 #关注的股票
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_Guogao_n_output.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_N_n_output.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_I_down_n_output.csv', index_col=None))
 
 existCode_array = []
 
+print("【 左光头阳线 + 最高日■柱形下跌 】||今日超过左边最高")
 while True:
 
-    print("-----------Guogao_n_N-----------")
+    # print("==", end=" ")
     # 循环抽出的股票代码
     loop_index = 0
-    for stock_code in df_stock_codes.code:
 
+    for stock_code in df_stock_codes.code:
+        
         if len(existCode_array) > 0 and ("%06d"%stock_code in existCode_array) :
             loop_index += 1
             continue
 
-        max_high_value = df_stock_codes.iloc[loop_index].max_high_value
+        left_max_high_value = df_stock_codes.iloc[loop_index].left_max_high_value
         loop_index += 1
 
         try:
@@ -50,14 +53,15 @@ while True:
             low_today = df_today.iloc[0].low
             if (
                 # T 型
-                (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
-                # 超过前高
-                and float(price_today) / float(max_high_value) <= 1.02
-                # 接近前高
-                and float(price_today) / float(max_high_value) >= 0.975
+                # (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
+                float(price_today) >= float(high_today)*0.995
+                # 超过左边最高
+                and float(price_today) >= float(left_max_high_value)*0.99
                 ):
                     existCode_array.append("%06d"%stock_code)
-                    print("%06d"%stock_code)  # 股票代码
+                    # tkinter.messagebox.showinfo('提示', "%06d"%stock_code)
+                    # print("%06d"%stock_code)  # 股票代码
+                    print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
                     # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
 
         except IndexError:
@@ -75,6 +79,8 @@ while True:
         except ZeroDivisionError:
             continue
             # print("%06d" % stock_code + ':ZeroDivisionError')
+        except AssertionError:
+            continue
 
     #休眠一下，继续获取实时股票数据
     # sleep(3)

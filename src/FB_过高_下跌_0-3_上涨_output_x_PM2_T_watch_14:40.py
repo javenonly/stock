@@ -29,7 +29,7 @@ df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_N_n_outp
 existCode_array = []
 
 while True:
-    print("--------Guogao_n_PM2_T----------------")
+    print("---《N模型-最近7天过高》《今日接近前高(0.975-1.02)..尾盘比2点的价格上涨..T型》-----------")
     # 循环抽出的股票代码
     loop_index = 0
 
@@ -56,16 +56,17 @@ while True:
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 # T型
                 (float(high_today) - float(price_today)) / (float(high_today) - float(low_today)) < 0.25
-                # 接近最高价
+                # # 接近最高价
                 and float(price_today) / float(max_high_value) < 1.02
-                # 接近前高 或者 超过前高
-                and float(price_today) / float(max_high_value) > 0.975
+                # # 接近前高 或者 超过前高
+                and float(price_today) / float(max_high_value) > 0.965
                 # 尾盘比2点的价格上涨
-                and float(price_today) / float(price_pm2) >= 1.005
+                and float(price_today) / float(price_pm2) >= 1.006
                 #★★★★★★★★★★★★★★★★尾盘(2.30以后)选股条件★★★★★★★★★★★★★★★★
                 ):  
                     existCode_array.append("%06d"%stock_code)
-                    print("%06d"%stock_code)  # 股票代码
+                    # print("%06d"%stock_code)  # 股票代码
+                    print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
                     # tkinter.messagebox.showinfo('上涨提示', '股票：[' + "%06d"%stock_code + ']->比下午2点上涨1%以上')
 
         except IndexError:

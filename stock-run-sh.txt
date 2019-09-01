@@ -3,35 +3,43 @@
 python3 /Users/shawn/Documents/workspace/stock/src/N_n_output.py
 [N_n_T->T]型
 python3 /Users/shawn/Documents/workspace/stock/src/N_n_T_output.py
-
 V型 （最低价后，右边三个阳线）
 python3 /Users/shawn/Documents/workspace/stock/src/V_search_output.py
-
 L_n->T型 (最高点（10天）前)
 python3 /Users/shawn/Documents/workspace/stock/src/L__n_output.py
 ************************************************************************************
 
 【2点】: 获取2点时的价格
 python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2.py
+python3 /Users/shawn/Documents/workspace/stock/src/L__n_output_PM2.py
 
+===================================2:30====================================================
 ##########[N_n->T]型##########
-【2：30】：T型，接近前高
+【2：30】：T型，(十分接近)前高（0.98-1.015）
 python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_T_Current_watch_on.py
 
-【2：30】：T型，接近前高，尾盘上涨
+【2：30】：T型，接近—超过-前高（0.975-1.02），尾盘上涨(比2点价格上涨0.05)
 python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2_T_Current_watch_on.py
+===================================2:30====================================================
 
-【2：30】：T型，尾盘上涨
-python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2_T_UP_Current_watch_on.py
-
-##########[N_n_T->T]型##########
-【2：30】：前一日为T型，尾盘超过前一日收盘价，（今日又是T型--要求低）
-python3 /Users/shawn/Documents/workspace/stock/src/N_n_T_output_T_Current_watch_on.py
+===================================2:45====================================================
+【2：45】：T型，尾盘上涨(比2点价格上涨0.08)
+---------python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_PM2_T_UP_Current_watch_on.py
 
 ##########L_n->T型##########
-【2：30】：T型，接近前高
+【2：45】：T型，接近前高（0.988-1.02）
 python3 /Users/shawn/Documents/workspace/stock/src/L__n_output_T_Current_watch_on.py
+===================================2:45====================================================
+
+===================================2:50====================================================
+【2：50】：T型，(十分接近)前高（0.988-1.015）
+----------python3 /Users/shawn/Documents/workspace/stock/src/N_n_output_T_Current_OneTime_Thread.py
+
+##########[N_n_T->过T的收盘价]型##########
+【2：50】：前一日为T型，尾盘超过前一日收盘价
+----------python3 /Users/shawn/Documents/workspace/stock/src/N_n_T_output_T_Current_watch_on.py
 
 ########## V型 ##########
-~【2：30】后执行：V型 3%以上涨幅
+【2：50】后执行：V型 4，5%以上涨幅
 python3 /Users/shawn/Documents/workspace/stock/src/V_search_Watch_On.py
+===================================2:50====================================================

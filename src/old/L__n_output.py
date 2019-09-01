@@ -19,15 +19,14 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 index_stock = 0
 # ,code
 #直接保存
-out = open(stock_data_path + var_date + '_N_n_T_output.csv','a', newline='')
+out = open(stock_data_path + var_date + '_L__n_output.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
-csv_write.writerow(['',"code","data_1_close"])
+csv_write.writerow(['',"code","max_high_value"])
 
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
     try:
         df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None))
-        
         #从第一条数据开始
         buy_index = -1
         data_1 = df_history.iloc[buy_index+1]
@@ -45,63 +44,40 @@ for stock_code in df_all_code.code:
         data_13 = df_history.iloc[buy_index+13]
         data_14 = df_history.iloc[buy_index+14]
         data_15 = df_history.iloc[buy_index+15]
+        # data_16 = df_history.iloc[buy_index+16]
+        # data_17 = df_history.iloc[buy_index+17]
+        # data_18 = df_history.iloc[buy_index+18]
+        # data_19 = df_history.iloc[buy_index+19]
+        # data_20 = df_history.iloc[buy_index+20]
         # 最高价集合
         data_high_array = [data_1.high,data_2.high,data_3.high,data_4.high,data_5.high,
                           data_6.high,data_7.high,data_8.high,data_9.high,data_10.high,
                           data_11.high,data_12.high,data_13.high,data_14.high,data_15.high]
-        # 最低价集合
-        data_low_array = [data_1.low,data_2.low,data_3.low,data_4.low,data_5.low,
-                          data_6.low,data_7.low,data_8.low,data_9.low,data_10.low,
-                          data_11.low,data_12.low,data_13.low,data_14.low,data_15.low]
         # 收盘价集合
         data_close_array = [data_1.close,data_2.close,data_3.close,data_4.close,data_5.close,
-                            data_6.close,data_7.close,data_8.close,data_9.close,data_10.close,
-                            data_11.close,data_12.close,data_13.close,data_14.close,data_15.close]
+                          data_6.close,data_7.close,data_8.close,data_9.close,data_10.close,
+                          data_11.close,data_12.close,data_13.close,data_14.close,data_15.close]
+        # 开盘价集合
+        data_open_array = [data_1.open,data_2.open,data_3.open,data_4.open,data_5.open,
+                          data_6.open,data_7.open,data_8.open,data_9.open,data_10.open,
+                          data_11.open,data_12.open,data_13.open,data_14.open,data_15.open]
         # 最高价集合中最高价
         max_high_value = max(data_high_array)
-        # 最高价集合中最高价
+        # 收盘价集合中最高价
         max_close_value = max(data_close_array)
+        # 最低价集合中最低价
+        min_open_value = min(data_open_array)
         # 最高价中最高价的索引
         most_high_index = data_high_array.index(max_high_value)
-        # print(most_high_index)
         if (
-            # 最近7天过高
-            most_high_index >= 1
-            # 【过高日】的前一日 < max_high_value
-            and most_high_index <= 6
-            # T型
-            and (float(data_1.open) - float(data_1.low)) / (float(data_1.high) - float(data_1.low)) > 0.55
-            and data_1.close >= data_1.open*0.994
-
+            # 12天前出现最高价
+            most_high_index >= 12
+            and max_close_value / min_open_value <= 1.08
+            and data_1.close >= max_high_value * 0.92
             ):
-                # 左边长度
-                left_length = 15 - most_high_index -1
-                # print(left_length)
-                # 右边长度
-                right_length = most_high_index
-                # 左边最高价集合
-                left_data_high_array = [1]*left_length
-                # 左边最低价集合
-                left_data_low_array = [1]*left_length
-                left_i = 0
-                while left_i < left_length:
-                    left_data_high_array[left_i] = data_high_array[14-left_i]
-                    left_data_low_array[left_i] = data_low_array[14-left_i]
-                    left_i += 1
-                # 左边最高价集合中的最高价
-                left_max_high_value = max(left_data_high_array)
-                # 左边最低价集合中的最低价
-                left_min_low_value = min(left_data_low_array)
-                # 左边没有大幅度涨过，振幅 < 10%
-                if( left_max_high_value / left_min_low_value <= 1.10
-                    # # 排除已经过多上涨的(最高收盘价已经过大上涨)
-                    # and max_close_value / left_max_high_value <= 1.02
-                    # 左边最后一条不是最高价
-                    and left_data_high_array[left_length-1] < left_max_high_value
-                    ):
-                        print("%06d"%stock_code)
-                        csv_write.writerow([index_stock,"%06d"%stock_code,data_1.close])
-                        index_stock += 1
+                print("%06d"%stock_code)
+                csv_write.writerow([index_stock,"%06d"%stock_code,max_high_value])
+                index_stock += 1
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
         continue
@@ -111,6 +87,4 @@ for stock_code in df_all_code.code:
     except urllib.error.URLError:
         continue
     except socket.timeout:
-        continue
-    except ZeroDivisionError:
         continue
