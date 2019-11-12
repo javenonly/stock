@@ -59,7 +59,7 @@ for stock_code in df_all_code.code:
         # print(most_2_high_index)
         # 
         if (most_2_high_index < most_high_index
-            and most_2_high_index > 3
+            and most_2_high_index > 0 #第二高点所在位置
             and most_high_index < (int_scope - 1)
             and max_2_high_value*1.03 < max_high_value):
 
@@ -76,7 +76,7 @@ for stock_code in df_all_code.code:
 
                 if (most_right_low_value < most_left_low_value
                     # B点间隔C点3个交易日以上
-                    and most_left_low_value_index > 3
+                    and most_left_low_value_index > 2
                     # 目前最低点为最近2日
                     and most_right_low_value_index < 5
                     # 目前价格接近最低价
@@ -101,11 +101,12 @@ for stock_code in df_all_code.code:
                             round(rate,3),',',            #实际回调率
                             back_rate[i],',',             #接近回调率
                             round(down_v,3),',',          #预计最低点
-                            round(ab_cd,3),',',           #AB=CD
-                            round((down_v + ab_cd)/2,3),',', #预计价(均价)
-                            most_right_low_value,',',        #实际最低价
-                            data1_close,',',                 #现价
-                            round((data1_close/most_right_low_value - 1),3) ) #距离最低价涨幅
+                            round(ab_cd,3)                #AB=CD
+                            # round((down_v + ab_cd)/2,3)   #预计价(均价)
+                            # most_right_low_value,',',        #实际最低价
+                            # data1_close,',',                 #现价
+                            # round((data1_close/most_right_low_value - 1),3) 
+                            ) #距离最低价涨幅
                             # csv_write.writerow([index_stock,"%06d"%stock_code])
                             index_stock += 1
                             break
