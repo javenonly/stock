@@ -40,6 +40,8 @@ for stock_code in df_all_code.code:
         data1_close = df_history.iloc[add_index].close
         # 第2条数据
         data2_close = df_history.iloc[add_index+1].close
+        # 第一条数据的最高价
+        data1_high = df_history.iloc[add_index].high
         # 最高价集合
         data_high_array = []
         # 最低价集合
@@ -83,13 +85,13 @@ for stock_code in df_all_code.code:
                     # # 最高收盘价涨幅小于2%
                     # and max_close_value / left_max_high_value <= 1.02
                     # 最高价左边第一条（left_data_high_array[left_length-1]）等于左边最高价
-                    and left_data_high_array[0] < left_max_high_value
+                    and left_data_high_array[0] <= left_max_high_value
                     # and float(data1_close)*1.03 >= float(max_high_value) * 0.98
                     # and data1_close > data2_close
                     ):
                         print("%06d"%stock_code)
-                        # csv_write.writerow([index_stock,"%06d"%stock_code,max_high_value])
-                        # index_stock += 1
+                        csv_write.writerow([index_stock,"%06d"%stock_code,data1_high])
+                        index_stock += 1
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
         continue
