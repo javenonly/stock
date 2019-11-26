@@ -69,7 +69,11 @@ for stock_code in df_all_code.code:
                 left_max_high_value = max(left_data_high_array)
                 # 左边最低价集合中的最低价
                 left_min_low_value = min(left_data_low_array)
+                ma5 = df_history.iloc[most_high_index].ma5
+                ma10 = df_history.iloc[most_high_index].ma10
                 if( 1 == 1
+                    # 多头排列 ma5 > ma10
+                    and ma5 >= ma10
                     # 短期横盘（最近int_scope天数内），突然突破上涨
                     # 左边没有大幅度涨过，振幅 < 10%
                     # and left_max_high_value / left_min_low_value <= 1.12
