@@ -42,21 +42,21 @@ while True:
         try:
             # 获取股票实时数据
             df_today = ts.get_realtime_quotes("%06d"%stock_code)
-            # 今日最高价
+            # 今日开盘价
             open_today = df_today.iloc[0].open
-            # # 今日最高价
+            # 今日最高价
             # high_today = df_today.iloc[0].high
-            # # 今日实时价
-            # price_today = df_today.iloc[0].price
+            # 今日实时价
+            price_today = df_today.iloc[0].price
             # # 今日最低价
-            # low_today = df_today.iloc[0].low
+            low_today = df_today.iloc[0].low
             if (
                 # 开盘价 > 昨日最高价
-                float(open_today) >= float(max_high_value)
-                # # 超过前高
-                # and float(price_today) / float(max_high_value) <= 1.02
-                # # 接近前高
-                # and float(price_today) / float(max_high_value) >= 0.98
+                float(open_today) > float(max_high_value)
+                # 今日最低价 < 今日开盘价
+                and float(low_today) < float(open_today)
+                # 今日实时价 > 今日开盘价
+                and float(price_today) >= float(open_today)
                 ):
                     existCode_array.append("%06d"%stock_code)
                     # print("%06d"%stock_code)  # 股票代码
