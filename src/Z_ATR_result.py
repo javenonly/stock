@@ -16,7 +16,7 @@ stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 #读取所有股票代码
 # df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + 'all_code_1.csv', index_col=None))
-df_all_code = ['002903']
+df_all_code = ['002906']
 #历史数据日期yyyymmdd文件夹
 index_stock = 0
 # 范围
@@ -47,7 +47,7 @@ for stock_code in df_all_code:
         # df_today = ts.get_realtime_quotes(stock_code)
         # 今日实时价（尾盘买入时判断）
         # price_today = df_today.iloc[0].price
-        price_today = 15.5
+        price_today = 12.98
         # print(price_today)
 
         zhengfu_tr_array = []

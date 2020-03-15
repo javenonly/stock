@@ -22,12 +22,12 @@ df_all_code_file = gl.get_value('df_all_code_file')
 df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index_col=None))
 
 #计算数组内[]后面几天的上涨概率
-up_days = [1,2]
+up_days = [1,2,3,4,5]
 #抽出的股票代码
 list_code = []
 #涨幅的2.5%概率
-long_total = 0
-up_cnt = 0
+all_total = 0
+all_up_cnt = 0
 #买入日后up_days[]天内的，最高点的涨幅
 price_up_rate = 1.015
 
@@ -102,25 +102,28 @@ for stock_code in df_all_code.code:
                         and buy_day.open > df_history.iloc[buy_index + 1].high
                         and buy_day.low < df_history.iloc[buy_index + 1].high
                         # and buy_day.high > buy_day.open
+                        # 收盘价 > 开盘价
                         and buy_day.close > buy_day.open
 
                     ):
                         #■■■■■■■■■■■■■■■■【计算】■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
                         # 符合选股条件的总数
                         long_total += 1
-                        #选股日后的up_days天，最高点比前高最高点涨幅达到price_up_rate以上概率
+                        all_total += 1
                         up_cnt_boolean = False
                         for up_day in up_days:
-                            if (df_history.iloc[buy_index - up_day].high / buy_day.open > price_up_rate):
+                            #选股日后的up_days天，最高点比前高最高点涨幅达到price_up_rate以上概率
+                            # if (df_history.iloc[buy_index - up_day].high / buy_day.close > price_up_rate):
+                            # 低于买入日的最低价
+                            if (df_history.iloc[buy_index - up_day].low < df_history.iloc[buy_index].low ):
                                 up_cnt_boolean = True
-                                # print("OK:"+df_history.iloc[buy_index].date)
                                 break
                         if up_cnt_boolean:
                             # 上涨的总数
                             up_cnt += 1
+                            all_up_cnt += 1
                             up_dates += ":上涨"+df_history.iloc[buy_index].date
                         else:
-                            # print("NG:"+df_history.iloc[buy_index].date)
                             down_dates += ":下跌"+df_history.iloc[buy_index].date
             buy_index += 1
 
@@ -134,3 +137,5 @@ for stock_code in df_all_code.code:
         print("%06d" % stock_code + ':'+str(long_total)+':' +str(up_cnt/long_total*100) + up_dates + down_dates)
     else:
         print("%06d" % stock_code + ':none:-')
+
+print(str(all_total)+':' +str(all_up_cnt/all_total*100))

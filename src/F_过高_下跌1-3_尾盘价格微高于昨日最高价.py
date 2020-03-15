@@ -34,11 +34,14 @@ for stock_code in df_stock_codes.code:
 
     try:
         # 今日开盘价
-        open_today = df_today.iloc[0].open
+        # open_today = df_today.iloc[0].open
+        # 今日最高价
+        high_today = df_today.iloc[0].high
         # print(open_today)
         # print(max_high_value)
-            # 开盘价 > 昨日最高价
-        if (float(open_today) > float(max_high_value)):
+        # 开盘价 < 昨日最高价
+        # 今日最高价 < 昨日最高价
+        if (float(high_today) < float(max_high_value)):
             watch_stock = {'stock_code':"%06d"%stock_code,'stock_value':max_high_value}
             watch_stock_list.append(watch_stock)
 
@@ -86,24 +89,24 @@ while True:
             # 获取股票实时数据
             df_today = ts.get_realtime_quotes(stock_item_code)
             # 今日开盘价
-            open_today = df_today.iloc[0].open
+            # open_today = df_today.iloc[0].open
             # 今日最高价
-            # high_today = df_today.iloc[0].high
+            high_today = df_today.iloc[0].high
             # 今日实时价
             price_today = df_today.iloc[0].price
             # # 今日最低价
-            low_today = df_today.iloc[0].low
-            if (
+            # low_today = df_today.iloc[0].low
+            if ( 1 == 1
                 # 开盘价 > 昨日最高价
-                float(open_today) > float(stock_item_value)
-                # 今日最低价 <= 昨日最高价
-                and float(low_today) <= float(stock_item_value)
-                # 今日实时价 > 今日开盘价
-                and float(price_today) >= float(open_today)*0.995
+                # float(open_today) > float(stock_item_value)
+                # 今日实时价 >=  今日最高价
+                and float(price_today) >= float(high_today)
+                # 今日实时价 >= 昨日最高价
+                and float(price_today) >= float(stock_item_value)*0.995
                 ):
                     existCode_array.append(stock_item_code)
                     # print("%06d"%stock_code)  # 股票代码
-                    print(stock_item_code,":",open_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
+                    print(stock_item_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
                     # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
 
         except IndexError:

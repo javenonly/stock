@@ -68,7 +68,7 @@ print("---《最近7天过高》下跌1-3天，今日高开，下跌，回升超
 print_loop = 0
 while True:
     print(".",end=" ")
-    if (print_loop % 20 == 0):
+    if (print_loop % 40 == 0):
         print(".")
     # 循环抽出的股票代码
     loop_index = 0
@@ -93,13 +93,13 @@ while True:
             price_today = df_today.iloc[0].price
             # # 今日最低价
             low_today = df_today.iloc[0].low
-            if (
+            if ( 1 == 1
                 # 开盘价 > 昨日最高价
-                float(open_today) > float(stock_item_value)
-                # 今日最低价 <= 昨日最高价
-                and float(low_today) <= float(stock_item_value)
+                and float(open_today) > float(stock_item_value)
+                # 今日最低价 < 今日开盘价
+                # and float(low_today) <= float(stock_item_value)
                 # 今日实时价 > 今日开盘价
-                and float(price_today) >= float(open_today)*0.995
+                and float(price_today) >= float(open_today)*0.992
                 ):
                     existCode_array.append(stock_item_code)
                     # print("%06d"%stock_code)  # 股票代码
