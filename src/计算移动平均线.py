@@ -34,34 +34,47 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 # 遍历所有股票
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
-    # try:
-    # 获取单个股票的历史数据
-    stock_data = pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None)
-    # 导入数据 - 注意：这里请填写数据文件在您电脑中的路径
-    # stock_data = pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', parse_dates=[1])
+    try:
+        # 获取单个股票的历史数据
+        stock_data = pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', index_col=None)
+        # 导入数据 - 注意：这里请填写数据文件在您电脑中的路径
+        # stock_data = pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '.csv', parse_dates=[1])
 
-    # 将数据按照交易日期从远到近排序
-    stock_data.sort_values('date', inplace=True)
+        # 将数据按照交易日期从远到近排序
+        stock_data.sort_values('date', inplace=True)
 
-    # ========== 计算移动平均线
+        # ========== 计算移动平均线
 
-    # 分别计算5日、20日、60日的移动平均线
-    ma_list = [24, 99]
+        # 分别计算5日、20日、60日的移动平均线
+        ma_list = [24, 99]
 
-    # 计算简单算术移动平均线MA - 注意：stock_data['close']为股票每天的收盘价
-    for ma in ma_list:
-        # stock_data['MA_' + str(ma)] = pd.rolling_mean(stock_data['close'], ma)
-        stock_data['ma' + str(ma)] = np.round(pd.Series.rolling(stock_data['close'],window=ma).mean(),3)
+        # 计算简单算术移动平均线MA - 注意：stock_data['close']为股票每天的收盘价
+        for ma in ma_list:
+            # stock_data['MA_' + str(ma)] = pd.rolling_mean(stock_data['close'], ma)
+            stock_data['ma' + str(ma)] = np.round(pd.Series.rolling(stock_data['close'],window=ma).mean(),3)
 
-    # # 计算指数平滑移动平均线EMA
-    # for ma in ma_list:
-    #     stock_data['EMA_' + str(ma)] = pd.ewma(stock_data['close'], span=ma)
+        # # 计算指数平滑移动平均线EMA
+        # for ma in ma_list:
+        #     stock_data['EMA_' + str(ma)] = pd.ewma(stock_data['close'], span=ma)
 
-    # 将数据按照交易日期从近到远排序
-    stock_data.sort_values('date', ascending=False, inplace=True)
+        # 将数据按照交易日期从近到远排序
+        stock_data.sort_values('date', ascending=False, inplace=True)
 
-    # ========== 将算好的数据输出到csv文件 - 注意：这里请填写输出文件在您电脑中的路径
-    stock_data.to_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '_ma.csv', index=False)
+        # ========== 将算好的数据输出到csv文件 - 注意：这里请填写输出文件在您电脑中的路径
+        stock_data.to_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '_ma.csv', index=False)
+        # print('<<<<<<<<<<<'+ "%06d"%stock_code +'<<<<<<<<<<<')
+    except IndexError:
+        # print("%06d" % stock_code + 'IndexError')
+        continue
+    except FileNotFoundError:
+        # print("%06d" % stock_code + 'FileNotFoundError')
+        continue
+    except urllib.error.URLError:
+        continue
+    except socket.timeout:
+        continue
+
+print('OVER')
         
 
 
