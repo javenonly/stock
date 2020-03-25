@@ -60,7 +60,7 @@ while True:
                 # # 当日上涨
                 and float(price_today) >= float(high_today)
                 # # 今日下跌至ma24
-                and (float(high_today) - float(low_today)) < float(min_change_value)
+                and (float(high_today) - float(low_today)) <= float(min_change_value)*0.75
                 ):
                     existCode_array.append("%06d"%stock_code)
                     # print("%06d"%stock_code)  # 股票代码
