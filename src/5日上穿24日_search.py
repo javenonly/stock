@@ -20,7 +20,7 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 # 符合条件数据的索引
 index_stock = 0
 # 范围
-int_scope = 5
+int_scope = 7
 # 0:从第一条数据开始
 add_index = 0
 myday = datetime.datetime( int(var_date[0:4]),int(var_date[4:6]),int(var_date[6:8]) ) + datetime.timedelta(days=-add_index)
@@ -60,7 +60,7 @@ for stock_code in df_all_code.code:
             # 最高价中最高价的索引
             most_high_index = data_high_array.index(max_high_value)
 
-            if most_high_index <= 1:
+            if most_high_index <= 2:
 
                 # index_down = index
                 print("%06d"%stock_code)
