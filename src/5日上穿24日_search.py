@@ -38,6 +38,7 @@ for stock_code in df_all_code.code:
         df_history = pd.DataFrame(pd.read_csv(stock_data_path + var_date + '/' + "%06d"%stock_code + '_ma.csv', index_col=None))
         # 第一条数据最低价
         data1_close = df_history.iloc[add_index].close
+        data1_high = df_history.iloc[add_index].high
         data1_p_change = df_history.iloc[add_index].p_change
         # 第一条数据ma5
         data1_ma5 = df_history.iloc[add_index].ma5
@@ -46,7 +47,7 @@ for stock_code in df_all_code.code:
         # 第一条数据ma99
         data1_ma99 = df_history.iloc[add_index].ma99
 
-        if ( data1_ma5 < data1_ma24 and data1_close > data1_ma5 and data1_p_change > 0 and data1_p_change < 5.5):
+        if ( data1_ma5 < data1_ma24 and data1_close > data1_ma5 and data1_high < data1_ma24 and data1_p_change > 0 and data1_p_change < 5.5):
 
             # 最高价集合
             data_high_array = []
