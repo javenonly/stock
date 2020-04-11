@@ -20,7 +20,7 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 # 符合条件数据的索引
 index_stock = 0
 # 范围
-int_scope = 5
+int_scope = 10
 # 0:从第一条数据开始
 add_index = 0
 myday = datetime.datetime( int(var_date[0:4]),int(var_date[4:6]),int(var_date[6:8]) ) + datetime.timedelta(days=-add_index)
@@ -45,24 +45,35 @@ for stock_code in df_all_code.code:
         # 第一条数据ma99
         data1_ma99 = df_history.iloc[add_index].ma99
 
-        if ( data1_ma5 > data1_ma24 and data1_low > data1_ma24):
-
+        if ( data1_ma5 > data1_ma24 and data1_low > data1_ma24 and data1_ma5 < data1_ma99):
+            below_index = 0
             for index in range(int_scope):
                 if ( df_history.iloc[index+add_index].ma5 < df_history.iloc[index+add_index].ma24 ):
+                    below_index = index
+                    break
+            
+            below_ok = False
+            if below_index > 0:
+                for index in range(below_index - 1):
+                    if ( df_history.iloc[index].low < df_history.iloc[index].ma24 ):
+                        below_ok = True
+                        break
+                
+                if below_ok == False :
                     # index_down = index
                     print("%06d"%stock_code)
                     csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
                     index_stock += 1
-                    break
+                    # break
         
-        if (data1_ma24 > data1_ma99 and data1_low > data1_ma24):
-            for index in range(int_scope):
-                if ( df_history.iloc[index+add_index].ma24 < df_history.iloc[index+add_index].ma99 ):
-                    # index_down = index
-                    print("%06d"%stock_code)
-                    csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
-                    index_stock += 1
-                    break
+        # if (data1_ma24 > data1_ma99 and data1_low > data1_ma24):
+        #     for index in range(int_scope):
+        #         if ( df_history.iloc[index+add_index].ma24 < df_history.iloc[index+add_index].ma99 ):
+        #             # index_down = index
+        #             print("%06d"%stock_code)
+        #             csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
+        #             index_stock += 1
+        #             break
 
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
