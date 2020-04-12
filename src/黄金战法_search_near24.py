@@ -20,7 +20,7 @@ df_all_code = pd.DataFrame(pd.read_csv(stock_data_path + df_all_code_file, index
 # 符合条件数据的索引
 index_stock = 0
 # 范围
-int_scope = 15
+int_scope = 21
 # 0:从第一条数据开始
 add_index = 0
 myday = datetime.datetime( int(var_date[0:4]),int(var_date[4:6]),int(var_date[6:8]) ) + datetime.timedelta(days=-add_index)
@@ -53,17 +53,29 @@ for stock_code in df_all_code.code:
                     below_index = index
                     break
             
-            # below_ok = False
+
+            below_ok = False
             # 最高价集合
-            # data_low_array = []
-            if below_index >= 3:
-                for index in range(2):
-                    print('index-------',index)
-                    if (df_history.iloc[index].low)* 0.99 < df_history.iloc[index].ma24 :
-                    # data_low_array.append(df_history.iloc[index].low)
-                        print("%06d"%stock_code)
-                        # csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
-                        index_stock += 1
+            # （5日均线价格 < 24日均线价格）在 7日前
+            if below_index >= 5:
+                for index in range(below_index - 1):
+                    # 最近7日内价格最低价格都在24日均线价格之上
+                    if ( df_history.iloc[index].low < df_history.iloc[index].ma24 ):
+                        below_ok = True
+                        break
+                
+                if below_ok == False :
+                    # 最近2天，最低价接近24日均线价
+                    for index in range(2):
+                        # print('index-------',index)
+                        if (df_history.iloc[index].low)* 0.99 < df_history.iloc[index].ma24 :
+                        # data_low_array.append(df_history.iloc[index].low)
+                            print("%06d"%stock_code)
+                            csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
+                            index_stock += 1
+
+
+
                     # break
         
         # if (data1_ma24 > data1_ma99 and data1_low > data1_ma24):

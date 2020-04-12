@@ -47,7 +47,7 @@ for stock_code in df_all_code.code:
         # 第一条数据ma99
         data1_ma99 = df_history.iloc[add_index].ma99
 
-        if ( data1_ma5 < data1_ma24 and data1_close > data1_ma5 and data1_high < data1_ma24 and data1_p_change > 0 and data1_p_change < 5.5):
+        if ( data1_ma5 < data1_ma24 and data1_ma5 > data1_ma99 and data1_close > data1_ma5 and data1_high < data1_ma24 and data1_p_change > 0 and data1_p_change < 5.5):
 
             # 最高价集合
             data_high_array = []
