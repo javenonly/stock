@@ -73,6 +73,7 @@ for stock_code in df_all_code.code:
                             print("%06d"%stock_code)
                             csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
                             index_stock += 1
+                            break
 
 
 

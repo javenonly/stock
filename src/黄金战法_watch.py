@@ -51,20 +51,20 @@ while True:
             # 今日最高价
             # high_today = df_today.iloc[0].high
             # 今日实时价
-            price_today = df_today.iloc[0].price
+            # price_today = df_today.iloc[0].price
             # 今日最低价
-            # low_today = df_today.iloc[0].low
+            low_today = df_today.iloc[0].low
             if ( 1 == 1
                 # 振幅小
                 # and (float(high_today) - float(low_today)) / float(low_today) < 0.015
                 # # 当日上涨
                 # and float(price_today) >= float(open_today)
                 # # 今日下跌至ma24
-                and float(price_today)*0.99 <= float(ma24_value)
+                and float(low_today)*0.99 <= float(ma24_value)
                 ):
                     existCode_array.append("%06d"%stock_code)
                     # print("%06d"%stock_code)  # 股票代码
-                    print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
+                    print("%06d"%stock_code,":",low_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
                     # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
 
         except IndexError:
