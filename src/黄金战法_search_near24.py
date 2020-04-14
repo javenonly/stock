@@ -29,7 +29,7 @@ first_day = myday.strftime('%Y%m%d')
 out = open(stock_data_path + first_day + '_A_search_near24.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 # ,code,max_high_value(最高价)
-csv_write.writerow(['',"code","ma24"])
+csv_write.writerow(['',"code","ma5","low"])
 # 遍历所有股票
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
@@ -71,7 +71,7 @@ for stock_code in df_all_code.code:
                         if (df_history.iloc[index].low)* 0.99 < df_history.iloc[index].ma24 :
                         # data_low_array.append(df_history.iloc[index].low)
                             print("%06d"%stock_code)
-                            csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
+                            csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma5,data1_low])
                             index_stock += 1
                             break
 
