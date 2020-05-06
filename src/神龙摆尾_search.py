@@ -26,7 +26,7 @@ add_index = 0
 myday = datetime.datetime( int(var_date[0:4]),int(var_date[4:6]),int(var_date[6:8]) ) + datetime.timedelta(days=-add_index)
 first_day = myday.strftime('%Y%m%d')
 #先生成一个文件
-out = open(stock_data_path + first_day + '_A_search.csv','a', newline='')
+out = open(stock_data_path + first_day + '_SL_search.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 # ,code,max_high_value(最高价)
 csv_write.writerow(['',"code","ma24"])
@@ -48,8 +48,10 @@ for stock_code in df_all_code.code:
         if ( data1_ma5 > data1_ma24 and data1_low > data1_ma24 and data1_ma5 < data1_ma99):
             below_index = 0
             ma5_array = []
+            p_change_array = []
             for index in range(int_scope):
                 ma5_array.append(df_history.iloc[index+add_index].ma5)
+                p_change_array.append(df_history.iloc[index+add_index].p_change)
                 if ( df_history.iloc[index+add_index].ma5 < df_history.iloc[index+add_index].ma24 ):
                     below_index = index
                     break
@@ -57,35 +59,22 @@ for stock_code in df_all_code.code:
             # print(below_index)
             # print(ma5_array)
 
-            below_ok = False
             # （5日均线价格 < 24日均线价格）在 7日前
-            if below_index >= 2:
-                max_ma5 = max(ma5_array)
-                max_ma5_index = ma5_array.index(max_ma5)
-                # print(max_ma5)
-                # print(max_ma5_index)
-                if (max_ma5 / df_history.iloc[max_ma5_index].ma24 >= 1.045):
-                    for index in range(below_index - 1):
-                        # 最近7日内价格最低价格都在24日均线价格之上
-                        if ( df_history.iloc[index].low < df_history.iloc[index].ma24 ):
-                            below_ok = True
-                            break
+            if below_index >= 1:
+                p_change_10 = max(p_change_array)
                 
-                    if below_ok == False :
+                if p_change_10 > 9.9 :
+                    p_change_10_index =  p_change_array.index(p_change_10)
+
+                    if (p_change_10_index >= 1 and p_change_10_index < 4
+                    and df_history.iloc[p_change_10_index -1 ].high > df_history.iloc[p_change_10_index].high
+                    # and df_history.iloc[p_change_10_index -2 ].high < df_history.iloc[p_change_10_index - 1].high
+                    ):
                         # index_down = index
                         print("%06d"%stock_code)
                         csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
                         index_stock += 1
                         # break
-        
-        # if (data1_ma24 > data1_ma99 and data1_low > data1_ma24):
-        #     for index in range(int_scope):
-        #         if ( df_history.iloc[index+add_index].ma24 < df_history.iloc[index+add_index].ma99 ):
-        #             # index_down = index
-        #             print("%06d"%stock_code)
-        #             csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
-        #             index_stock += 1
-        #             break
 
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')

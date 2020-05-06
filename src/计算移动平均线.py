@@ -45,8 +45,8 @@ for stock_code in df_all_code.code:
 
         # ========== 计算移动平均线
 
-        # 分别计算5日、20日、60日的移动平均线
-        ma_list = [24, 99]
+        # 分别计算24日、99日、144日的移动平均线
+        ma_list = [24, 99, 144]
 
         # 计算简单算术移动平均线MA - 注意：stock_data['close']为股票每天的收盘价
         for ma in ma_list:
