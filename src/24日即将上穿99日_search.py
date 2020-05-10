@@ -26,10 +26,10 @@ add_index = 0
 myday = datetime.datetime( int(var_date[0:4]),int(var_date[4:6]),int(var_date[6:8]) ) + datetime.timedelta(days=-add_index)
 first_day = myday.strftime('%Y%m%d')
 #先生成一个文件
-out = open(stock_data_path + first_day + '_24_V_99_search.csv','a', newline='')
+out = open(stock_data_path + first_day + '_24_99_search.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 # ,code,max_high_value(最高价)
-csv_write.writerow(['',"code","ma24"])
+csv_write.writerow(['',"code","ma5","ma24"])
 # 遍历所有股票
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
@@ -39,7 +39,7 @@ for stock_code in df_all_code.code:
         # 第一条数据最低价
         data1_close = df_history.iloc[0].close
         data1_high = df_history.iloc[0].high
-        data1_p_change = df_history.iloc[0].p_change
+        data1_low = df_history.iloc[0].low
         # 第一条数据ma5
         data1_ma5 = df_history.iloc[0].ma5
         # 第一条数据ma24
@@ -51,15 +51,17 @@ for stock_code in df_all_code.code:
         # 第二条数据ma99
         data2_ma99 = df_history.iloc[1].ma99
         # 差
-        deviation_24 = data2_ma24 - data1_ma24
-        deviation_99 = data2_ma99 - data1_ma99
+        deviation_24 = data1_ma24 - data2_ma24
+        deviation_99 = data1_ma99 - data2_ma99
         # 第一条数据ma144
         data1_ma144 = df_history.iloc[0].ma144
 
-        if ( data1_ma5 > data1_ma99 and data1_ma99 > data1_ma24 and deviation_24 > 0 and (data1_ma24 + deviation_24) >= (data1_ma99 + deviation_99)):
+        if ( data1_ma5 > data1_ma99 and data1_ma99 > data1_ma24 and deviation_24 > 0 
+        and (data1_ma24 + deviation_24*3) >= (data1_ma99 + deviation_99*3)
+        and data1_low < data1_ma5 and data1_low > data1_ma24 ):
             # index_down = index
             print("%06d"%stock_code)
-            csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
+            csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma5,data1_ma24])
             index_stock += 1
 
     except IndexError:
