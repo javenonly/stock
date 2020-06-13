@@ -69,7 +69,7 @@ for stock_code in df_all_code.code:
             max_high_index_array = list(max_high_map)
             max_high_index = max_high_index_array[0]
 
-            if max_high_index < 2:
+            if max_high_index < 3:
                 print("%06d"%stock_code)
 
 

@@ -29,7 +29,7 @@ first_day = myday.strftime('%Y%m%d')
 out = open(stock_data_path + first_day + '_5_99_search.csv','a', newline='')
 csv_write = csv.writer(out,dialect='excel')
 # ,code,max_high_value(最高价)
-csv_write.writerow(['',"code","ma99","ma24"])
+csv_write.writerow(['',"code","ma99","ma24","min_volume"])
 # 遍历所有股票
 for stock_code in df_all_code.code:
     # print('>>>>>>>>>>>'+ "%06d"%stock_code +'>>>>>>>>>')
@@ -50,6 +50,7 @@ for stock_code in df_all_code.code:
         data1_ma144 = df_history.iloc[add_index].ma144
         # 第二条数据ma24
         data2_ma24 = df_history.iloc[1].ma24
+        volume_array = []
 
         if ( data1_ma5 > data1_ma99 and data1_ma99 > data1_ma24 and data1_ma24 > data2_ma24):
 
@@ -61,10 +62,14 @@ for stock_code in df_all_code.code:
 
             if below_index > 0:
 
+                for index in range(int_scope):
+                    volume_array.append(df_history.iloc[index].volume)
+
+                min_volume = min(volume_array)
                 # index_down = index
                 print("%06d"%stock_code)
-                # csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma24])
-                # index_stock += 1
+                csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma99,data1_ma24,min_volume])
+                index_stock += 1
 
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
