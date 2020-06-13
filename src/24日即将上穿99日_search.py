@@ -56,9 +56,10 @@ for stock_code in df_all_code.code:
         # 第一条数据ma144
         data1_ma144 = df_history.iloc[0].ma144
 
-        if ( data1_ma5 > data1_ma99 and data1_ma99 > data1_ma24 and deviation_24 > 0 
-        and (data1_ma24 + deviation_24*3) >= (data1_ma99 + deviation_99*3)
-        and data1_low < data1_ma5 and data1_low > data1_ma24 ):
+        if ( data1_ma5 > data1_ma99 and data1_ma99 > data1_ma24 and data1_ma24 > data1_ma144 and deviation_24 > 0 
+        and (data1_ma24 + deviation_24*2) >= (data1_ma99 + deviation_99*2)
+        and data1_low > data1_ma24
+        and data1_low * 0.95 < data1_ma24 ):
             # index_down = index
             print("%06d"%stock_code)
             csv_write.writerow([index_stock,"%06d"%stock_code,data1_ma5,data1_ma24])

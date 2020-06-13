@@ -61,12 +61,14 @@ for stock_code in df_all_code.code:
         min_low_value = min(data_low_array)
         min_volume_value = min(data_volume_array)
         min_change_value = min(data_change_array)
+
+        min_low_index = data_low_array.index(min_low_value)
         # 最高价中最高价的索引
         min_volume_index = data_volume_array.index(min_volume_value)
         # 最高价中最高价的索引
         data_change_index = data_change_array.index(min_change_value)
 
-        if min_volume_index <= 1 and data_change_index <= 1:
+        if  min_low_index <= 1 and min_volume_index <= 1 and data_change_index <= 1:
             print("%06d"%stock_code)
             csv_write.writerow([index_stock,"%06d"%stock_code,min_change_value])
             index_stock += 1

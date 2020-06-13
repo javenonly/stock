@@ -59,9 +59,9 @@ while True:
                 # 振幅小
                 # and (float(high_today) - float(low_today)) / float(low_today) < 0.015
                 # # 最低价格接近24日价
-                float(low_today)*0.99 <= float(ma24_value)
+                float(price_today)*0.99 <= float(ma24_value)
                 # # 当前价格即将超过5日价
-                or float(price_today)*1.005 >= float(ma5_value)
+                # or float(price_today)*1.005 >= float(ma5_value)
                 ):
                     existCode_array.append("%06d"%stock_code)
                     # print("%06d"%stock_code)  # 股票代码
