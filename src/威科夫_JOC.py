@@ -56,36 +56,38 @@ for stock_code in df_all_code.code:
         # 最高价中最高价的索引
         total_max_high_index = total_data_high_array.index(total_max_high_value)
 
-        data_high_array = total_data_high_array[:right_scope]
+        for index_scope in range(right_scope, right_scope + 20) 
+            data_high_array = total_data_high_array[:index_scope]
 
-        # for index in range(right_scope):
-        #     data_high_array.append(df_history.iloc[index].high)
-        #     data_low_array.append(df_history.iloc[index].low)
-        #     data_close_array.append(df_history.iloc[index].close)
-        
-        # # 最高价集合中最高价
-        max_high_value = max(data_high_array)
-        # 最高价集合中最高价
-        # max_close_value = max(data_close_array)
-        # 最高价中最高价的索引
-        max_high_index = data_high_array.index(max_high_value)
-        if (
-            # 最近【right_scope】天内，最近3天过高(1:昨日、2:前日、3:大前日)
-            max_high_index > 0  #【0 = 今日最高价-不看】
-            and max_high_index <= 5 # 【过高日】的前一日 < max_high_value
-            ):
-                left_data_high_array = data_high_array[max_high_index+3:]
-                # left_data_low_array = data_low_array[most_high_index+1:]
-                # # 左边最高价集合中的最高价
-                left_max_high_value = max(left_data_high_array)
-                left_max_high_index = left_data_high_array.index(left_max_high_value)
-                # # 左边最低价集合中的最低价
-                # left_min_low_value = min(left_data_low_array)
-                if left_max_high_index > 30 and total_max_high_index > (30 + max_high_index+3 ) :
+            # for index in range(right_scope):
+            #     data_high_array.append(df_history.iloc[index].high)
+            #     data_low_array.append(df_history.iloc[index].low)
+            #     data_close_array.append(df_history.iloc[index].close)
+            
+            # # 最高价集合中最高价
+            max_high_value = max(data_high_array)
+            # 最高价集合中最高价
+            # max_close_value = max(data_close_array)
+            # 最高价中最高价的索引
+            max_high_index = data_high_array.index(max_high_value)
+            if (
+                # 最近【right_scope】天内，最近3天过高(1:昨日、2:前日、3:大前日)
+                max_high_index > 0  #【0 = 今日最高价-不看】
+                and max_high_index <= 5 # 【过高日】的前一日 < max_high_value
+                ):
+                    left_data_high_array = data_high_array[max_high_index+3:]
+                    # left_data_low_array = data_low_array[most_high_index+1:]
+                    # # 左边最高价集合中的最高价
+                    left_max_high_value = max(left_data_high_array)
+                    left_max_high_index = left_data_high_array.index(left_max_high_value)
+                    # # 左边最低价集合中的最低价
+                    # left_min_low_value = min(left_data_low_array)
+                    if left_max_high_index > 30 and total_max_high_index > (30 + max_high_index+3 ) :
 
-                    print("%06d"%stock_code)
-                    csv_write.writerow([index_stock,"%06d"%stock_code,left_max_high_value])
-                    index_stock += 1
+                        print("%06d"%stock_code)
+                        csv_write.writerow([index_stock,"%06d"%stock_code,left_max_high_value])
+                        index_stock += 1
+                        break;
     except IndexError:
         # print("%06d" % stock_code + 'IndexError')
         continue
