@@ -67,9 +67,9 @@ existCode_array = []
 print("---《最近7天过高》下跌1-3天，今日高开，下跌，回升超过开盘价-----------")
 print_loop = 0
 while True:
-    print(".",end=" ")
-    if (print_loop % 20 == 0):
-        print(".")
+    # print(".",end=" ")
+    # if (print_loop % 20 == 0):
+    #     print(".")
     # 循环抽出的股票代码
     loop_index = 0
     for stock_item in watch_stock_list:

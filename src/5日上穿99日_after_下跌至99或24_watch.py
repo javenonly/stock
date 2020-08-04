@@ -21,16 +21,16 @@ stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 #关注的股票
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_Guogao_n_output.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_5_99_search.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_5_99_after_search.csv', index_col=None))
 
 existCode_array = []
 
 print("---5日上穿99-----------")
 print_loop = 0
 while True:
-    print(".",end=" ")
-    if (print_loop % 20 == 0):
-        print(".")
+    # print(".",end=" ")
+    # if (print_loop % 20 == 0):
+    #     print(".")
 
     # 循环抽出的股票代码
     loop_index = 0

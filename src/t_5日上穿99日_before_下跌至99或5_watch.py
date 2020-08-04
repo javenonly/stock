@@ -21,16 +21,16 @@ stock_data_path = gl.get_value('stock_data_path')
 df_all_code_file = gl.get_value('df_all_code_file')
 #关注的股票
 #读取[Guogao_1days_T_search.py -> YYYYMMDD_Guogao_n_output.csv]结果的所有股票代码
-df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_24_99_v_search.csv', index_col=None))
+df_stock_codes = pd.DataFrame(pd.read_csv(stock_data_path + var_date +'_5_99_before_search.csv', index_col=None))
 
 existCode_array = []
 
-print("---《最近n天24金叉99》缩量-----------")
+print("---5日上穿99-----------")
 print_loop = 0
 while True:
-    print(".",end=" ")
-    if (print_loop % 20 == 0):
-        print(".")
+    # print(".",end=" ")
+    # if (print_loop % 20 == 0):
+    #     print(".")
 
     # 循环抽出的股票代码
     loop_index = 0
@@ -40,8 +40,8 @@ while True:
             loop_index += 1
             continue
 
-        low_value = df_stock_codes.iloc[loop_index].low
-        volume_value = df_stock_codes.iloc[loop_index].volume
+        ma99_value = df_stock_codes.iloc[loop_index].ma99
+        ma5_value = df_stock_codes.iloc[loop_index].ma5
         loop_index += 1
 
         try:
@@ -52,23 +52,14 @@ while True:
             # 今日最高价
             # high_today = df_today.iloc[0].high
             # 今日实时价
-            price_today = df_today.iloc[0].price
+            # price_today = df_today.iloc[0].price
             # 今日最低价
             low_today = df_today.iloc[0].low
-            # 今日成交量
-            volume_today = df_today.iloc[0].volume
-            if (
-                # 振幅小
-                # and (float(high_today) - float(low_today)) / float(low_today) < 0.015
-                # # 最低价格接近24日价
-                float(low_today)*0.99 <= float(low_value)
-                # # 当前价格即将超过5日价
-                and float(volume_today) / 100 <= float(volume_value)*0.7
-                ):
-                    existCode_array.append("%06d"%stock_code)
-                    # print("%06d"%stock_code)  # 股票代码
-                    print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
-                    # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
+            if ( float(low_today)*0.995 < float(ma99_value) or float(low_today)*0.995 < float(ma5_value)):
+                existCode_array.append("%06d"%stock_code)
+                print("%06d"%stock_code)  # 股票代码
+                # print("%06d"%stock_code,":",price_today, ":", time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time())))  # 股票代码
+                # tkinter.messagebox.showinfo('过高提示', '股票：[' + "%06d"%stock_code + ']->过高提示')
 
         except IndexError:
             continue

@@ -28,9 +28,9 @@ existCode_array = []
 print("---《最近n天24金叉99》-----------")
 print_loop = 0
 while True:
-    print(".",end=" ")
-    if (print_loop % 20 == 0):
-        print(".")
+    # print(".",end=" ")
+    # if (print_loop % 20 == 0):
+    #     print(".")
 
     # 循环抽出的股票代码
     loop_index = 0
@@ -59,7 +59,7 @@ while True:
                 # 振幅小
                 # and (float(high_today) - float(low_today)) / float(low_today) < 0.015
                 # # 最低价格接近24日价
-                float(price_today)*0.99 <= float(ma24_value)
+                float(low_today)*0.995 <= float(ma24_value)
                 # # 当前价格即将超过5日价
                 # or float(price_today)*1.005 >= float(ma5_value)
                 ):
